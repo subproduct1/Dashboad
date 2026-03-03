@@ -1,0 +1,2191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Summary Business Plan 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="xlsx.js"></script>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #181c27; --surface2: #1e2333;
+    --border: #2a3050; --accent: #f0a500; --accent2: #7c6af7;
+    --accent3: #3ecf8e; --text: #e8eaf0; --text-muted: #7a83a0; --red: #f05252;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
+
+  /* ── MENU PAGE ── */
+  #menu-page {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: 100vh; padding: 40px 24px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .menu-header { text-align:center; margin-bottom:52px; }
+  .menu-header h1 { font-family:'DM Serif Display',serif; font-size:2.6rem; letter-spacing:0.04em; }
+  .menu-header h1 span { color:var(--accent); }
+  .menu-header p { font-family:'DM Mono',monospace; font-size:0.78rem; letter-spacing:0.2em; color:#c8cfe0; margin-top:10px; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 780px;
+    width: 100%;
+  }
+
+  .menu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .menu-card::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; bottom:0;
+    background: var(--card-accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+    border-radius: 16px;
+  }
+  .menu-card:hover { transform:translateY(-4px); box-shadow:0 12px 40px rgba(0,0,0,0.4); border-color:var(--card-color); }
+  .menu-card:hover::before { opacity:1; }
+
+  .card-icon { font-size: 2.4rem; margin-bottom:14px; position:relative; z-index:1; }
+  .card-label {
+    font-family:'DM Serif Display',serif; font-size:1.4rem;
+    color:var(--text); margin-bottom:6px; position:relative; z-index:1;
+  }
+  .card-sub {
+    font-family:'DM Mono',monospace; font-size:0.68rem;
+    letter-spacing:0.15em; color:var(--text-muted);
+    text-transform:uppercase; position:relative; z-index:1;
+  }
+  .card-arrow {
+    position:absolute; bottom:20px; right:24px;
+    font-size:1.2rem; color:var(--card-color);
+    opacity:0; transform:translateX(-8px);
+    transition:opacity 0.2s, transform 0.2s;
+    z-index:1;
+  }
+  .menu-card:hover .card-arrow { opacity:1; transform:translateX(0); }
+
+  /* ── BACK BUTTON ── */
+  .back-btn {
+    position: fixed; top:16px; left:20px; z-index:9999;
+    display:none; align-items:center; gap:8px;
+    font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700;
+    letter-spacing:0.06em; color:#0d0f1a;
+    background:var(--accent); border:2px solid var(--accent);
+    padding:10px 20px; border-radius:24px; cursor:pointer;
+    box-shadow: 0 4px 16px rgba(240,165,0,0.35);
+    transition:all 0.2s;
+  }
+  .back-btn:hover {
+    background:#fff; color:#0d0f1a;
+    box-shadow: 0 6px 24px rgba(240,165,0,0.5);
+    transform: translateY(-1px);
+  }
+  .back-btn.visible { display:flex; }
+
+  /* ── DASHBOARD PAGES ── */
+  .dashboard-page { padding:40px 32px; }
+
+  /* ── UPLOAD CORNER (shared) ── */
+  .upload-trigger {
+    position:fixed; top:12px; right:16px; z-index:9998;
+    opacity:0; transition:opacity 0.3s ease;
+  }
+  .upload-trigger:hover { opacity:1; }
+  body:hover .upload-trigger { opacity:0.15; }
+  body:hover .upload-trigger:hover { opacity:1; }
+  .upload-trigger-btn {
+    display:flex; align-items:center; gap:6px;
+    font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:600;
+    letter-spacing:0.08em; color:#0f1117; background:var(--accent3);
+    border:none; padding:6px 14px; border-radius:20px; cursor:pointer;
+    transition:transform 0.15s, box-shadow 0.2s; white-space:nowrap;
+    box-shadow:0 2px 12px rgba(62,207,142,0.3);
+  }
+  .upload-trigger-btn:hover { transform:translateY(-1px); box-shadow:0 4px 18px rgba(62,207,142,0.5); }
+  input[type=file] { display:none; }
+
+  /* ── STATUS TOAST ── */
+  .status-bar {
+    position:fixed; bottom:24px; left:50%;
+    transform:translateX(-50%) translateY(80px);
+    font-family:'DM Mono',monospace; font-size:0.76rem;
+    color:var(--text); background:var(--surface2); border:1px solid var(--border);
+    padding:10px 22px; border-radius:40px; opacity:0;
+    transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+    z-index:10000; white-space:nowrap;
+  }
+  .status-bar.show { transform:translateX(-50%) translateY(0); opacity:1; }
+  .status-bar.green { border-color:rgba(62,207,142,0.4); color:var(--accent3); }
+  .status-bar.yellow { border-color:rgba(240,165,0,0.4); color:var(--accent); }
+  .status-bar.red { border-color:rgba(240,82,82,0.4); color:var(--red); }
+
+  /* ── HEADER inside dashboards ── */
+  header { text-align:center; margin-bottom:40px; animation:fadeDown 0.6s ease both; }
+  header h1 { font-family:'DM Serif Display',serif; font-size:2.4rem; letter-spacing:0.04em; color:var(--text); }
+  header h1 span { color:var(--accent); }
+  header p { text-align:center; font-size:0.82rem; letter-spacing:0.2em; color:#c8cfe0; font-weight:500; margin-top:8px; font-family:'DM Mono',monospace; }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom:48px; animation:fadeUp 0.6s ease both; }
+  .section-label { display:inline-flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); margin-bottom:16px; padding:5px 14px; background:rgba(240,165,0,0.08); border:1px solid rgba(240,165,0,0.2); border-radius:4px; }
+  .section-label.q   { color:var(--accent2); background:rgba(124,106,247,0.08); border-color:rgba(124,106,247,0.2); }
+  .section-label.ytd { color:var(--accent3); background:rgba(62,207,142,0.08);  border-color:rgba(62,207,142,0.2); }
+  .table-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); background:var(--surface); }
+  table { width:100%; border-collapse:collapse; font-family:'DM Mono',monospace; font-size:0.82rem; }
+  thead th { background:var(--surface2); color:#c8cfe0; font-size:0.72rem; letter-spacing:0.1em; padding:12px 16px; text-align:right; border-bottom:1px solid var(--border); white-space:nowrap; font-weight:600; }
+  thead th:first-child { text-align:left; min-width:120px; }
+  .quarter-header th { background:rgba(124,106,247,0.1); font-size:0.68rem; color:rgba(180,170,255,0.9); padding:5px 16px; letter-spacing:0.12em; font-weight:600; }
+  .quarter-header th:first-child { background:transparent; }
+  th.month-btn { cursor:pointer; transition:background 0.2s,color 0.2s; user-select:none; }
+  th.month-btn:hover  { background:rgba(240,165,0,0.12); color:var(--accent); }
+  th.month-btn.active { background:rgba(240,165,0,0.20); color:var(--accent); }
+  th.month-btn::after { content:' ▾'; font-size:0.6rem; opacity:0.5; }
+  th.month-btn.active::after { content:' ▴'; }
+  th.month-btn.has-data { color:var(--accent3); }
+  th.month-btn.has-data::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent3); margin-right:5px; vertical-align:middle; }
+  tbody tr { border-bottom:1px solid rgba(42,48,80,0.5); transition:background 0.15s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:rgba(255,255,255,0.02); }
+  tbody td { padding:13px 16px; text-align:right; white-space:nowrap; color:var(--text); }
+  tbody td:first-child { text-align:left; color:var(--text-muted); font-size:0.75rem; letter-spacing:0.08em; }
+  .row-bp td { color:#c5cae9; } .row-bp td:first-child { color:#7986cb; }
+  .row-fc td { color:var(--accent3); } .row-fc td:first-child { color:var(--accent3); }
+  .row-pct td { color:var(--accent); } .row-pct td:first-child { color:var(--accent); }
+  .total-col { background:rgba(255,255,255,0.03); font-weight:500; }
+  .total-col.bp  { color:#7986cb !important; }
+  .total-col.fc  { color:var(--accent3) !important; }
+  .total-col.pct { color:var(--accent) !important; }
+  .detail-panel { max-height:0; overflow:hidden; transition:max-height 0.55s cubic-bezier(0.4,0,0.2,1),opacity 0.35s ease; opacity:0; }
+  .detail-panel.open { max-height:5000px; opacity:1; }
+  th.month-btn.active { background:var(--accent) !important; color:#0d0f1a !important; }
+  .detail-inner { margin-top:18px; border:1px solid rgba(240,165,0,0.25); border-radius:12px; overflow:hidden; background:#13161f; }
+  .detail-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:14px 20px; background:rgba(240,165,0,0.07); border-bottom:1px solid rgba(240,165,0,0.18); }
+  .detail-header h3 { font-family:'DM Serif Display',serif; font-size:1rem; color:var(--accent); }
+  .badge { font-family:'DM Mono',monospace; font-size:0.76rem; color:var(--text-muted); }
+  .badge span { color:var(--accent3); font-weight:600; margin-left:5px; }
+  .close-btn { cursor:pointer; font-family:'DM Mono',monospace; font-size:0.74rem; font-weight:600; color:#ffffff; background:rgba(240,82,82,0.2); border:1px solid rgba(240,82,82,0.6); padding:5px 14px; border-radius:6px; transition:all 0.2s; }
+  .close-btn:hover { background:rgba(240,82,82,0.4); }
+  .no-data { padding:28px 24px; color:var(--text-muted); font-family:'DM Mono',monospace; font-size:0.78rem; }
+  .detail-table-wrap { overflow-x:auto; }
+  .detail-table { width:100%; border-collapse:collapse; font-family:'DM Mono',monospace; font-size:0.75rem; }
+  .detail-table thead th { background:#252b42; color:#ffffff; font-size:0.72rem; letter-spacing:0.1em; padding:11px 13px; text-align:left; border-bottom:2px solid var(--accent); white-space:nowrap; font-weight:700; text-transform:uppercase; }
+  .detail-table thead th.r { text-align:right; }
+  .detail-table tbody tr { border-bottom:1px solid rgba(42,48,80,0.35); transition:background 0.1s; }
+  .detail-table tbody tr:hover { background:rgba(255,255,255,0.02); }
+  .detail-table tbody td { padding:9px 13px; text-align:left; color:var(--text); }
+  .detail-table tbody td.r { text-align:right; }
+  .detail-table tbody td.amt { color:var(--accent3); text-align:right; }
+  .detail-table tbody td.bal { color:#7986cb; text-align:right; }
+  .detail-table tbody td.muted { color:var(--text-muted); }
+  .detail-table tbody td.desc { min-width:200px; white-space:normal; word-break:break-word; }
+  .detail-table tfoot td { padding:10px 13px; background:rgba(255,255,255,0.04); font-weight:600; border-top:1px solid var(--border); text-align:right; font-size:0.75rem; color:var(--text); }
+  .detail-table tfoot td:first-child { text-align:left; color:var(--accent); letter-spacing:0.1em; }
+  .detail-table tfoot .f-amt { color:var(--accent3); }
+  .detail-table tfoot .f-bal { color:var(--red); }
+
+  @media (max-width:600px) { .menu-grid { grid-template-columns:1fr; } }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- ── BACK BUTTON ── -->
+<button class="back-btn" id="back-btn" onclick="showMenu()">← Back</button>
+
+<!-- ── UPLOAD CORNER (shown only when on a dashboard) ── -->
+<div class="upload-trigger" id="upload-corner" style="display:none">
+  <button class="upload-trigger-btn" id="upload-corner-btn">⬆ Upload Excel</button>
+</div>
+
+<!-- ── SHARED STATUS TOAST ── -->
+<div class="status-bar" id="global-statusBar"></div>
+
+<!-- ══ MENU PAGE ══ -->
+<div id="menu-page">
+  <div class="menu-header">
+    <h1>Summary Business Plan <span>2026</span></h1>
+    <p>SELECT DASHBOARD &nbsp;·&nbsp; FY 2026–2027</p>
+  </div>
+  <div class="menu-grid">
+    
+    <div class="menu-card" onclick="showDashboard(&#39;building&#39;)" style="--card-color:#f0a500;--card-accent:rgba(240,165,0,0.15)">
+      <div class="card-icon">🏢</div>
+      <div class="card-label">Building</div>
+      <div class="card-sub">REPAIRING BUILDING</div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="menu-card" onclick="showDashboard(&#39;indirect&#39;)" style="--card-color:#7c6af7;--card-accent:rgba(124,106,247,0.15)">
+      <div class="card-icon">📦</div>
+      <div class="card-label">Indirect</div>
+      <div class="card-sub">INDIRECT</div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="menu-card" onclick="showDashboard(&#39;perishable&#39;)" style="--card-color:#3ecf8e;--card-accent:rgba(62,207,142,0.15)">
+      <div class="card-icon">⚙️</div>
+      <div class="card-label">Perishable Tools</div>
+      <div class="card-sub">PERISHABLE TOOLS</div>
+      <div class="card-arrow">→</div>
+    </div>
+    <div class="menu-card" onclick="showDashboard(&#39;repairingmc&#39;)" style="--card-color:#f05252;--card-accent:rgba(240,82,82,0.15)">
+      <div class="card-icon">🛠️</div>
+      <div class="card-label">Repairing MC</div>
+      <div class="card-sub">REPAIRING MC</div>
+      <div class="card-arrow">→</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD PAGES ══ -->
+<div id="building-dashboard" class="dashboard-page" style="display:none">
+<!-- ── HIDDEN UPLOAD CORNER (only visible on hover) ── -->
+<div class="upload-trigger">
+  <button class="upload-trigger-btn" onclick="document.getElementById(&#39;building-excelInput&#39;).click()">
+    ⬆ Upload Excel
+  </button>
+  <input type="file" id="building-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_building(event)">
+</div>
+
+<!-- ── STATUS TOAST ── -->
+<div class="status-bar green" id="building-statusBar">✅ 13 month(s) loaded: SUMMARY, APR, MAY, JUNE, JULY, AUG, SEP, OCT, NOV, DEC, JAN 26, FEB 26, MAR 26</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <h1>Summary Business Plan <span>2026</span></h1>
+  <p>REPAIRING BUILDING &nbsp;·&nbsp; FY 2026–2027</p>
+</header>
+
+<!-- ══ MONTHLY ══ -->
+<div class="section">
+  <div class="section-label">📅 Monthly</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="quarter-header">
+          <th></th><th colspan="3">Q1</th><th colspan="3">Q2</th><th colspan="3">Q3</th><th colspan="3">Q4</th><th></th>
+        </tr>
+        <tr>
+          <th></th>
+          <th class="month-btn has-data" id="building-btn-apr26" onclick="window.toggleDetail_building(&#39;apr26&#39;)">Apr-26</th>
+          <th class="month-btn has-data" id="building-btn-may26" onclick="window.toggleDetail_building(&#39;may26&#39;)">May-26</th>
+          <th class="month-btn has-data" id="building-btn-jun26" onclick="window.toggleDetail_building(&#39;jun26&#39;)">Jun-26</th>
+          <th class="month-btn has-data" id="building-btn-jul26" onclick="window.toggleDetail_building(&#39;jul26&#39;)">Jul-26</th>
+          <th class="month-btn has-data" id="building-btn-aug26" onclick="window.toggleDetail_building(&#39;aug26&#39;)">Aug-26</th>
+          <th class="month-btn has-data" id="building-btn-sep26" onclick="window.toggleDetail_building(&#39;sep26&#39;)">Sep-26</th>
+          <th class="month-btn has-data" id="building-btn-oct26" onclick="window.toggleDetail_building(&#39;oct26&#39;)">Oct-26</th>
+          <th class="month-btn has-data" id="building-btn-nov26" onclick="window.toggleDetail_building(&#39;nov26&#39;)">Nov-26</th>
+          <th class="month-btn has-data" id="building-btn-dec26" onclick="window.toggleDetail_building(&#39;dec26&#39;)">Dec-26</th>
+          <th class="month-btn has-data" id="building-btn-jan27" onclick="window.toggleDetail_building(&#39;jan27&#39;)">Jan-27</th>
+          <th class="month-btn has-data" id="building-btn-feb27" onclick="window.toggleDetail_building(&#39;feb27&#39;)">Feb-27</th>
+          <th class="month-btn has-data" id="building-btn-mar27" onclick="window.toggleDetail_building(&#39;mar27&#39;)">Mar-27</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="building-bp-apr26">$ –</td><td id="building-bp-may26">$ –</td><td id="building-bp-jun26">$ –</td>
+          <td id="building-bp-jul26">$ –</td><td id="building-bp-aug26">$ –</td><td id="building-bp-sep26">$ –</td>
+          <td id="building-bp-oct26">$ –</td><td id="building-bp-nov26">$ –</td><td id="building-bp-dec26">$ –</td>
+          <td id="building-bp-jan27">$ –</td><td id="building-bp-feb27">$ –</td><td id="building-bp-mar27">$ –</td>
+          <td class="total-col bp" id="building-bp-total">$ –</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="building-fc-apr26">$ 0</td><td id="building-fc-may26">$ 0</td><td id="building-fc-jun26">$ 0</td>
+          <td id="building-fc-jul26">$ 0</td><td id="building-fc-aug26">$ 0</td><td id="building-fc-sep26">$ 0</td>
+          <td id="building-fc-oct26">$ 0</td><td id="building-fc-nov26">$ 0</td><td id="building-fc-dec26">$ 0</td>
+          <td id="building-fc-jan27">$ 0</td><td id="building-fc-feb27">$ 0</td><td id="building-fc-mar27">$ 0</td>
+          <td class="total-col fc" id="building-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="building-pct-apr26">0%</td><td id="building-pct-may26">0%</td><td id="building-pct-jun26">0%</td>
+          <td id="building-pct-jul26">0%</td><td id="building-pct-aug26">0%</td><td id="building-pct-sep26">0%</td>
+          <td id="building-pct-oct26">0%</td><td id="building-pct-nov26">0%</td><td id="building-pct-dec26">0%</td>
+          <td id="building-pct-jan27">0%</td><td id="building-pct-feb27">0%</td><td id="building-pct-mar27">0%</td>
+          <td class="total-col pct" id="building-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAIL PANELS -->
+  <div class="detail-panel" id="building-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-apr26">Opening Balance: <span>$ –</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;apr26&#39;)">✕ Close</div></div></div><div id="building-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-may26">Opening Balance: <span>$ –</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;may26&#39;)">✕ Close</div></div></div><div id="building-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-jun26">Opening Balance: <span>$ 7,000</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;jun26&#39;)">✕ Close</div></div></div><div id="building-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-jul26">Opening Balance: <span>$ 10,000</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;jul26&#39;)">✕ Close</div></div></div><div id="building-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-aug26">Opening Balance: <span>$ –</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;aug26&#39;)">✕ Close</div></div></div><div id="building-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-sep26">Opening Balance: <span>$ 17,000</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;sep26&#39;)">✕ Close</div></div></div><div id="building-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-oct26">Opening Balance: <span>$ –</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;oct26&#39;)">✕ Close</div></div></div><div id="building-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-nov26"><div class="detail-inner"><div class="detail-header"><h3>📋 November 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-nov26">Opening Balance: <span>$ –</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;nov26&#39;)">✕ Close</div></div></div><div id="building-body-nov26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-dec26"><div class="detail-inner"><div class="detail-header"><h3>📋 December 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-dec26">Opening Balance: <span>$ 17,000</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;dec26&#39;)">✕ Close</div></div></div><div id="building-body-dec26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-jan27"><div class="detail-inner"><div class="detail-header"><h3>📋 January 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-jan27">Opening Balance: <span>$ 17,000</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;jan27&#39;)">✕ Close</div></div></div><div id="building-body-jan27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-feb27"><div class="detail-inner"><div class="detail-header"><h3>📋 February 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-feb27">Opening Balance: <span>$ –</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;feb27&#39;)">✕ Close</div></div></div><div id="building-body-feb27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="building-detail-mar27"><div class="detail-inner"><div class="detail-header"><h3>📋 March 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="building-bal-mar27">Opening Balance: <span>$ 46,296</span></div><div class="close-btn" onclick="window.toggleDetail_building(&#39;mar27&#39;)">✕ Close</div></div></div><div id="building-body-mar27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+</div>
+
+<!-- ══ QUARTERLY ══ -->
+<div class="section">
+  <div class="section-label q">📊 Quarterly</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Q1</th><th>Q2</th><th>SMT1</th><th>Q3</th><th>Q4</th><th>SMT2</th><th>TOTAL</th></tr></thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="building-bp-q1">$ –</td><td id="building-bp-q2">$ –</td><td id="building-bp-smt1">$ –</td>
+          <td id="building-bp-q3">$ –</td><td id="building-bp-q4">$ –</td><td id="building-bp-smt2">$ –</td>
+          <td class="total-col bp" id="building-bp-total">$ 114,296</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="building-q-fc-q1">$ –</td><td id="building-q-fc-q2">$ –</td><td id="building-q-fc-smt1">$ –</td>
+          <td id="building-q-fc-q3">$ –</td><td id="building-q-fc-q4">$ –</td><td id="building-q-fc-smt2">$ –</td>
+          <td class="total-col fc" id="building-q-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="building-q-pct-q1">–</td><td id="building-q-pct-q2">–</td><td id="building-q-pct-smt1">–</td>
+          <td id="building-q-pct-q3">–</td><td id="building-q-pct-q4">–</td><td id="building-q-pct-smt2">–</td>
+          <td class="total-col pct" id="building-q-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ YEAR TO DATE ══ -->
+<div class="section">
+  <div class="section-label ytd">📈 Year To Date</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>YEARLY</th>
+          <th>Apr-26</th><th>May-26</th><th>Jun-26</th><th>Jul-26</th>
+          <th>Aug-26</th><th>Sep-26</th><th>Oct-26</th><th>Nov-26</th>
+          <th>Dec-26</th><th>Jan-27</th><th>Feb-27</th><th>Mar-27</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP</td>
+          <td id="building-ytdbp-apr26">–</td><td id="building-ytdbp-may26">–</td><td id="building-ytdbp-jun26">–</td><td id="building-ytdbp-jul26">–</td>
+          <td id="building-ytdbp-aug26">–</td><td id="building-ytdbp-sep26">–</td><td id="building-ytdbp-oct26">–</td><td id="building-ytdbp-nov26">–</td>
+          <td id="building-ytdbp-dec26">–</td><td id="building-ytdbp-jan27">–</td><td id="building-ytdbp-feb27">–</td><td id="building-ytdbp-mar27">–</td>
+        </tr>
+        <tr class="row-fc">
+          <td>ACTUAL</td>
+          <td id="building-ytd-apr26">–</td><td id="building-ytd-may26">–</td><td id="building-ytd-jun26">–</td><td id="building-ytd-jul26">–</td>
+          <td id="building-ytd-aug26">–</td><td id="building-ytd-sep26">–</td><td id="building-ytd-oct26">–</td><td id="building-ytd-nov26">–</td>
+          <td id="building-ytd-dec26">–</td><td id="building-ytd-jan27">–</td><td id="building-ytd-feb27">–</td><td id="building-ytd-mar27">–</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="building-var-apr26">–</td><td id="building-var-may26">–</td><td id="building-var-jun26">–</td><td id="building-var-jul26">–</td>
+          <td id="building-var-aug26">–</td><td id="building-var-sep26">–</td><td id="building-var-oct26">–</td><td id="building-var-nov26">–</td>
+          <td id="building-var-dec26">–</td><td id="building-var-jan27">–</td><td id="building-var-feb27">–</td><td id="building-var-mar27">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<div id="indirect-dashboard" class="dashboard-page" style="display:none">
+<!-- ── HIDDEN UPLOAD CORNER (only visible on hover) ── -->
+<div class="upload-trigger">
+  <button class="upload-trigger-btn" onclick="document.getElementById(&#39;indirect-excelInput&#39;).click()">
+    ⬆ Upload Excel
+  </button>
+  <input type="file" id="indirect-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_indirect(event)">
+</div>
+
+<!-- ── STATUS TOAST ── -->
+<div class="status-bar green" id="indirect-statusBar">✅ 13 month(s) loaded: SUMMARY, APR, MAY, JUNE, JULY, AUG, SEP, OCT, NOV, DEC, JAN 26, FEB 26, MAR 26</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <h1>Summary Business Plan <span>2026</span></h1>
+  <p>INDIRECT &nbsp;·&nbsp; FY 2026–2027</p>
+</header>
+
+<!-- ══ MONTHLY ══ -->
+<div class="section">
+  <div class="section-label">📅 Monthly</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="quarter-header">
+          <th></th><th colspan="3">Q1</th><th colspan="3">Q2</th><th colspan="3">Q3</th><th colspan="3">Q4</th><th></th>
+        </tr>
+        <tr>
+          <th></th>
+          <th class="month-btn has-data" id="indirect-btn-apr26" onclick="window.toggleDetail_indirect(&#39;apr26&#39;)">Apr-26</th>
+          <th class="month-btn has-data" id="indirect-btn-may26" onclick="window.toggleDetail_indirect(&#39;may26&#39;)">May-26</th>
+          <th class="month-btn has-data" id="indirect-btn-jun26" onclick="window.toggleDetail_indirect(&#39;jun26&#39;)">Jun-26</th>
+          <th class="month-btn has-data" id="indirect-btn-jul26" onclick="window.toggleDetail_indirect(&#39;jul26&#39;)">Jul-26</th>
+          <th class="month-btn has-data" id="indirect-btn-aug26" onclick="window.toggleDetail_indirect(&#39;aug26&#39;)">Aug-26</th>
+          <th class="month-btn has-data" id="indirect-btn-sep26" onclick="window.toggleDetail_indirect(&#39;sep26&#39;)">Sep-26</th>
+          <th class="month-btn has-data" id="indirect-btn-oct26" onclick="window.toggleDetail_indirect(&#39;oct26&#39;)">Oct-26</th>
+          <th class="month-btn has-data" id="indirect-btn-nov26" onclick="window.toggleDetail_indirect(&#39;nov26&#39;)">Nov-26</th>
+          <th class="month-btn has-data" id="indirect-btn-dec26" onclick="window.toggleDetail_indirect(&#39;dec26&#39;)">Dec-26</th>
+          <th class="month-btn has-data" id="indirect-btn-jan27" onclick="window.toggleDetail_indirect(&#39;jan27&#39;)">Jan-27</th>
+          <th class="month-btn has-data" id="indirect-btn-feb27" onclick="window.toggleDetail_indirect(&#39;feb27&#39;)">Feb-27</th>
+          <th class="month-btn has-data" id="indirect-btn-mar27" onclick="window.toggleDetail_indirect(&#39;mar27&#39;)">Mar-27</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="indirect-bp-apr26">$ –</td><td id="indirect-bp-may26">$ –</td><td id="indirect-bp-jun26">$ –</td>
+          <td id="indirect-bp-jul26">$ –</td><td id="indirect-bp-aug26">$ –</td><td id="indirect-bp-sep26">$ –</td>
+          <td id="indirect-bp-oct26">$ –</td><td id="indirect-bp-nov26">$ –</td><td id="indirect-bp-dec26">$ –</td>
+          <td id="indirect-bp-jan27">$ –</td><td id="indirect-bp-feb27">$ –</td><td id="indirect-bp-mar27">$ –</td>
+          <td class="total-col bp" id="indirect-bp-total">$ –</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="indirect-fc-apr26">$ 0</td><td id="indirect-fc-may26">$ 0</td><td id="indirect-fc-jun26">$ 0</td>
+          <td id="indirect-fc-jul26">$ 0</td><td id="indirect-fc-aug26">$ 0</td><td id="indirect-fc-sep26">$ 0</td>
+          <td id="indirect-fc-oct26">$ 0</td><td id="indirect-fc-nov26">$ 0</td><td id="indirect-fc-dec26">$ 0</td>
+          <td id="indirect-fc-jan27">$ 0</td><td id="indirect-fc-feb27">$ 0</td><td id="indirect-fc-mar27">$ 0</td>
+          <td class="total-col fc" id="indirect-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="indirect-pct-apr26">0%</td><td id="indirect-pct-may26">0%</td><td id="indirect-pct-jun26">0%</td>
+          <td id="indirect-pct-jul26">0%</td><td id="indirect-pct-aug26">0%</td><td id="indirect-pct-sep26">0%</td>
+          <td id="indirect-pct-oct26">0%</td><td id="indirect-pct-nov26">0%</td><td id="indirect-pct-dec26">0%</td>
+          <td id="indirect-pct-jan27">0%</td><td id="indirect-pct-feb27">0%</td><td id="indirect-pct-mar27">0%</td>
+          <td class="total-col pct" id="indirect-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAIL PANELS -->
+  <div class="detail-panel" id="indirect-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-apr26">Opening Balance: <span>$ 4,797</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;apr26&#39;)">✕ Close</div></div></div><div id="indirect-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-may26">Opening Balance: <span>$ 1,001</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;may26&#39;)">✕ Close</div></div></div><div id="indirect-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-jun26">Opening Balance: <span>$ 8,605.6</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;jun26&#39;)">✕ Close</div></div></div><div id="indirect-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-jul26">Opening Balance: <span>$ 3,406.63</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;jul26&#39;)">✕ Close</div></div></div><div id="indirect-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-aug26">Opening Balance: <span>$ 5,553.01</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;aug26&#39;)">✕ Close</div></div></div><div id="indirect-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-sep26">Opening Balance: <span>$ 5,028.01</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;sep26&#39;)">✕ Close</div></div></div><div id="indirect-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-oct26">Opening Balance: <span>$ 5,542.3</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;oct26&#39;)">✕ Close</div></div></div><div id="indirect-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-nov26"><div class="detail-inner"><div class="detail-header"><h3>📋 November 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-nov26">Opening Balance: <span>$ 4,968.01</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;nov26&#39;)">✕ Close</div></div></div><div id="indirect-body-nov26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-dec26"><div class="detail-inner"><div class="detail-header"><h3>📋 December 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-dec26">Opening Balance: <span>$ 5,028.66</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;dec26&#39;)">✕ Close</div></div></div><div id="indirect-body-dec26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-jan27"><div class="detail-inner"><div class="detail-header"><h3>📋 January 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-jan27">Opening Balance: <span>$ 4,428</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;jan27&#39;)">✕ Close</div></div></div><div id="indirect-body-jan27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-feb27"><div class="detail-inner"><div class="detail-header"><h3>📋 February 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-feb27">Opening Balance: <span>$ 4,718</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;feb27&#39;)">✕ Close</div></div></div><div id="indirect-body-feb27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-mar27"><div class="detail-inner"><div class="detail-header"><h3>📋 March 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-mar27">Opening Balance: <span>$ 4,403</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;mar27&#39;)">✕ Close</div></div></div><div id="indirect-body-mar27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+</div>
+
+<!-- ══ QUARTERLY ══ -->
+<div class="section">
+  <div class="section-label q">📊 Quarterly</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Q1</th><th>Q2</th><th>SMT1</th><th>Q3</th><th>Q4</th><th>SMT2</th><th>TOTAL</th></tr></thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="indirect-bp-q1">$ –</td><td id="indirect-bp-q2">$ –</td><td id="indirect-bp-smt1">$ –</td>
+          <td id="indirect-bp-q3">$ –</td><td id="indirect-bp-q4">$ –</td><td id="indirect-bp-smt2">$ –</td>
+          <td class="total-col bp" id="indirect-bp-total">$ 57,479.21</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="indirect-q-fc-q1">$ –</td><td id="indirect-q-fc-q2">$ –</td><td id="indirect-q-fc-smt1">$ –</td>
+          <td id="indirect-q-fc-q3">$ –</td><td id="indirect-q-fc-q4">$ –</td><td id="indirect-q-fc-smt2">$ –</td>
+          <td class="total-col fc" id="indirect-q-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="indirect-q-pct-q1">–</td><td id="indirect-q-pct-q2">–</td><td id="indirect-q-pct-smt1">–</td>
+          <td id="indirect-q-pct-q3">–</td><td id="indirect-q-pct-q4">–</td><td id="indirect-q-pct-smt2">–</td>
+          <td class="total-col pct" id="indirect-q-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ YEAR TO DATE ══ -->
+<div class="section">
+  <div class="section-label ytd">📈 Year To Date</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>YEARLY</th>
+          <th>Apr-26</th><th>May-26</th><th>Jun-26</th><th>Jul-26</th>
+          <th>Aug-26</th><th>Sep-26</th><th>Oct-26</th><th>Nov-26</th>
+          <th>Dec-26</th><th>Jan-27</th><th>Feb-27</th><th>Mar-27</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP</td>
+          <td id="indirect-ytdbp-apr26">–</td><td id="indirect-ytdbp-may26">–</td><td id="indirect-ytdbp-jun26">–</td><td id="indirect-ytdbp-jul26">–</td>
+          <td id="indirect-ytdbp-aug26">–</td><td id="indirect-ytdbp-sep26">–</td><td id="indirect-ytdbp-oct26">–</td><td id="indirect-ytdbp-nov26">–</td>
+          <td id="indirect-ytdbp-dec26">–</td><td id="indirect-ytdbp-jan27">–</td><td id="indirect-ytdbp-feb27">–</td><td id="indirect-ytdbp-mar27">–</td>
+        </tr>
+        <tr class="row-fc">
+          <td>ACTUAL</td>
+          <td id="indirect-ytd-apr26">–</td><td id="indirect-ytd-may26">–</td><td id="indirect-ytd-jun26">–</td><td id="indirect-ytd-jul26">–</td>
+          <td id="indirect-ytd-aug26">–</td><td id="indirect-ytd-sep26">–</td><td id="indirect-ytd-oct26">–</td><td id="indirect-ytd-nov26">–</td>
+          <td id="indirect-ytd-dec26">–</td><td id="indirect-ytd-jan27">–</td><td id="indirect-ytd-feb27">–</td><td id="indirect-ytd-mar27">–</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="indirect-var-apr26">–</td><td id="indirect-var-may26">–</td><td id="indirect-var-jun26">–</td><td id="indirect-var-jul26">–</td>
+          <td id="indirect-var-aug26">–</td><td id="indirect-var-sep26">–</td><td id="indirect-var-oct26">–</td><td id="indirect-var-nov26">–</td>
+          <td id="indirect-var-dec26">–</td><td id="indirect-var-jan27">–</td><td id="indirect-var-feb27">–</td><td id="indirect-var-mar27">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<div id="perishable-dashboard" class="dashboard-page" style="display:none">
+<!-- ── HIDDEN UPLOAD CORNER (only visible on hover) ── -->
+<div class="upload-trigger">
+  <button class="upload-trigger-btn" onclick="document.getElementById(&#39;perishable-excelInput&#39;).click()">
+    ⬆ Upload Excel
+  </button>
+  <input type="file" id="perishable-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_perishable(event)">
+</div>
+
+<!-- ── STATUS TOAST ── -->
+<div class="status-bar green" id="perishable-statusBar">✅ 13 month(s) loaded: SUMMARY, APR, MAY, JUNE, JULY, AUG, SEP, OCT, NOV, DEC, JAN, FEB, MAR</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <h1>Summary Business Plan <span>2026</span></h1>
+  <p>PERISHABLE TOOLS &nbsp;·&nbsp; FY 2026–2027</p>
+</header>
+
+<!-- ══ MONTHLY ══ -->
+<div class="section">
+  <div class="section-label">📅 Monthly</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="quarter-header">
+          <th></th><th colspan="3">Q1</th><th colspan="3">Q2</th><th colspan="3">Q3</th><th colspan="3">Q4</th><th></th>
+        </tr>
+        <tr>
+          <th></th>
+          <th class="month-btn has-data" id="perishable-btn-apr26" onclick="window.toggleDetail_perishable(&#39;apr26&#39;)">Apr-26</th>
+          <th class="month-btn has-data" id="perishable-btn-may26" onclick="window.toggleDetail_perishable(&#39;may26&#39;)">May-26</th>
+          <th class="month-btn has-data" id="perishable-btn-jun26" onclick="window.toggleDetail_perishable(&#39;jun26&#39;)">Jun-26</th>
+          <th class="month-btn has-data" id="perishable-btn-jul26" onclick="window.toggleDetail_perishable(&#39;jul26&#39;)">Jul-26</th>
+          <th class="month-btn has-data" id="perishable-btn-aug26" onclick="window.toggleDetail_perishable(&#39;aug26&#39;)">Aug-26</th>
+          <th class="month-btn has-data" id="perishable-btn-sep26" onclick="window.toggleDetail_perishable(&#39;sep26&#39;)">Sep-26</th>
+          <th class="month-btn has-data" id="perishable-btn-oct26" onclick="window.toggleDetail_perishable(&#39;oct26&#39;)">Oct-26</th>
+          <th class="month-btn has-data" id="perishable-btn-nov26" onclick="window.toggleDetail_perishable(&#39;nov26&#39;)">Nov-26</th>
+          <th class="month-btn has-data" id="perishable-btn-dec26" onclick="window.toggleDetail_perishable(&#39;dec26&#39;)">Dec-26</th>
+          <th class="month-btn has-data" id="perishable-btn-jan27" onclick="window.toggleDetail_perishable(&#39;jan27&#39;)">Jan-27</th>
+          <th class="month-btn has-data" id="perishable-btn-feb27" onclick="window.toggleDetail_perishable(&#39;feb27&#39;)">Feb-27</th>
+          <th class="month-btn has-data" id="perishable-btn-mar27" onclick="window.toggleDetail_perishable(&#39;mar27&#39;)">Mar-27</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="perishable-bp-apr26">$ –</td><td id="perishable-bp-may26">$ –</td><td id="perishable-bp-jun26">$ –</td>
+          <td id="perishable-bp-jul26">$ –</td><td id="perishable-bp-aug26">$ –</td><td id="perishable-bp-sep26">$ –</td>
+          <td id="perishable-bp-oct26">$ –</td><td id="perishable-bp-nov26">$ –</td><td id="perishable-bp-dec26">$ –</td>
+          <td id="perishable-bp-jan27">$ –</td><td id="perishable-bp-feb27">$ –</td><td id="perishable-bp-mar27">$ –</td>
+          <td class="total-col bp" id="perishable-bp-total">$ –</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="perishable-fc-apr26">$ 0</td><td id="perishable-fc-may26">$ 0</td><td id="perishable-fc-jun26">$ 0</td>
+          <td id="perishable-fc-jul26">$ 0</td><td id="perishable-fc-aug26">$ 0</td><td id="perishable-fc-sep26">$ 0</td>
+          <td id="perishable-fc-oct26">$ 0</td><td id="perishable-fc-nov26">$ 0</td><td id="perishable-fc-dec26">$ 0</td>
+          <td id="perishable-fc-jan27">$ 0</td><td id="perishable-fc-feb27">$ 0</td><td id="perishable-fc-mar27">$ 0</td>
+          <td class="total-col fc" id="perishable-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="perishable-pct-apr26">0%</td><td id="perishable-pct-may26">0%</td><td id="perishable-pct-jun26">0%</td>
+          <td id="perishable-pct-jul26">0%</td><td id="perishable-pct-aug26">0%</td><td id="perishable-pct-sep26">0%</td>
+          <td id="perishable-pct-oct26">0%</td><td id="perishable-pct-nov26">0%</td><td id="perishable-pct-dec26">0%</td>
+          <td id="perishable-pct-jan27">0%</td><td id="perishable-pct-feb27">0%</td><td id="perishable-pct-mar27">0%</td>
+          <td class="total-col pct" id="perishable-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAIL PANELS -->
+  <div class="detail-panel" id="perishable-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-apr26">Opening Balance: <span>$ 205</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;apr26&#39;)">✕ Close</div></div></div><div id="perishable-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-may26">Opening Balance: <span>$ 1,334</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;may26&#39;)">✕ Close</div></div></div><div id="perishable-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-jun26">Opening Balance: <span>$ 1,077</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;jun26&#39;)">✕ Close</div></div></div><div id="perishable-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-jul26">Opening Balance: <span>$ 622.72</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;jul26&#39;)">✕ Close</div></div></div><div id="perishable-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-aug26">Opening Balance: <span>$ 4,652.18</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;aug26&#39;)">✕ Close</div></div></div><div id="perishable-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-sep26">Opening Balance: <span>$ 4,804.11</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;sep26&#39;)">✕ Close</div></div></div><div id="perishable-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-oct26">Opening Balance: <span>$ 12,916.16</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;oct26&#39;)">✕ Close</div></div></div><div id="perishable-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-nov26"><div class="detail-inner"><div class="detail-header"><h3>📋 November 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-nov26">Opening Balance: <span>$ 4,734.85</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;nov26&#39;)">✕ Close</div></div></div><div id="perishable-body-nov26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-dec26"><div class="detail-inner"><div class="detail-header"><h3>📋 December 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-dec26">Opening Balance: <span>$ 5,978.23</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;dec26&#39;)">✕ Close</div></div></div><div id="perishable-body-dec26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-jan27"><div class="detail-inner"><div class="detail-header"><h3>📋 January 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-jan27">Opening Balance: <span>$ 12,939</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;jan27&#39;)">✕ Close</div></div></div><div id="perishable-body-jan27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-feb27"><div class="detail-inner"><div class="detail-header"><h3>📋 February 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-feb27">Opening Balance: <span>$ 4,718</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;feb27&#39;)">✕ Close</div></div></div><div id="perishable-body-feb27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-mar27"><div class="detail-inner"><div class="detail-header"><h3>📋 March 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-mar27">Opening Balance: <span>$ 4,697</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;mar27&#39;)">✕ Close</div></div></div><div id="perishable-body-mar27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+</div>
+
+<!-- ══ QUARTERLY ══ -->
+<div class="section">
+  <div class="section-label q">📊 Quarterly</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Q1</th><th>Q2</th><th>SMT1</th><th>Q3</th><th>Q4</th><th>SMT2</th><th>TOTAL</th></tr></thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="perishable-bp-q1">$ –</td><td id="perishable-bp-q2">$ –</td><td id="perishable-bp-smt1">$ –</td>
+          <td id="perishable-bp-q3">$ –</td><td id="perishable-bp-q4">$ –</td><td id="perishable-bp-smt2">$ –</td>
+          <td class="total-col bp" id="perishable-bp-total">$ 58,678.26</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="perishable-q-fc-q1">$ –</td><td id="perishable-q-fc-q2">$ –</td><td id="perishable-q-fc-smt1">$ –</td>
+          <td id="perishable-q-fc-q3">$ –</td><td id="perishable-q-fc-q4">$ –</td><td id="perishable-q-fc-smt2">$ –</td>
+          <td class="total-col fc" id="perishable-q-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="perishable-q-pct-q1">–</td><td id="perishable-q-pct-q2">–</td><td id="perishable-q-pct-smt1">–</td>
+          <td id="perishable-q-pct-q3">–</td><td id="perishable-q-pct-q4">–</td><td id="perishable-q-pct-smt2">–</td>
+          <td class="total-col pct" id="perishable-q-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ YEAR TO DATE ══ -->
+<div class="section">
+  <div class="section-label ytd">📈 Year To Date</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>YEARLY</th>
+          <th>Apr-26</th><th>May-26</th><th>Jun-26</th><th>Jul-26</th>
+          <th>Aug-26</th><th>Sep-26</th><th>Oct-26</th><th>Nov-26</th>
+          <th>Dec-26</th><th>Jan-27</th><th>Feb-27</th><th>Mar-27</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP</td>
+          <td id="perishable-ytdbp-apr26">–</td><td id="perishable-ytdbp-may26">–</td><td id="perishable-ytdbp-jun26">–</td><td id="perishable-ytdbp-jul26">–</td>
+          <td id="perishable-ytdbp-aug26">–</td><td id="perishable-ytdbp-sep26">–</td><td id="perishable-ytdbp-oct26">–</td><td id="perishable-ytdbp-nov26">–</td>
+          <td id="perishable-ytdbp-dec26">–</td><td id="perishable-ytdbp-jan27">–</td><td id="perishable-ytdbp-feb27">–</td><td id="perishable-ytdbp-mar27">–</td>
+        </tr>
+        <tr class="row-fc">
+          <td>ACTUAL</td>
+          <td id="perishable-ytd-apr26">–</td><td id="perishable-ytd-may26">–</td><td id="perishable-ytd-jun26">–</td><td id="perishable-ytd-jul26">–</td>
+          <td id="perishable-ytd-aug26">–</td><td id="perishable-ytd-sep26">–</td><td id="perishable-ytd-oct26">–</td><td id="perishable-ytd-nov26">–</td>
+          <td id="perishable-ytd-dec26">–</td><td id="perishable-ytd-jan27">–</td><td id="perishable-ytd-feb27">–</td><td id="perishable-ytd-mar27">–</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="perishable-var-apr26">–</td><td id="perishable-var-may26">–</td><td id="perishable-var-jun26">–</td><td id="perishable-var-jul26">–</td>
+          <td id="perishable-var-aug26">–</td><td id="perishable-var-sep26">–</td><td id="perishable-var-oct26">–</td><td id="perishable-var-nov26">–</td>
+          <td id="perishable-var-dec26">–</td><td id="perishable-var-jan27">–</td><td id="perishable-var-feb27">–</td><td id="perishable-var-mar27">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<div id="repairingmc-dashboard" class="dashboard-page" style="display:none">
+<!-- ── HIDDEN UPLOAD CORNER (only visible on hover) ── -->
+<div class="upload-trigger">
+  <button class="upload-trigger-btn" onclick="document.getElementById(&#39;repairingmc-excelInput&#39;).click()">
+    ⬆ Upload Excel
+  </button>
+  <input type="file" id="repairingmc-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_repairingmc(event)">
+</div>
+
+<!-- ── STATUS TOAST ── -->
+<div class="status-bar green" id="repairingmc-statusBar">✅ 13 month(s) loaded: SUMMARY, APR, MAY, JUNE, JULY, AUG, SEP, OCT, NOV, DEC, JAN, FEB, MAR</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <h1>Summary Business Plan <span>2026</span></h1>
+  <p>REPAIRING MC &nbsp;·&nbsp; FY 2026–2027</p>
+</header>
+
+<!-- ══ MONTHLY ══ -->
+<div class="section">
+  <div class="section-label">📅 Monthly</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr class="quarter-header">
+          <th></th><th colspan="3">Q1</th><th colspan="3">Q2</th><th colspan="3">Q3</th><th colspan="3">Q4</th><th></th>
+        </tr>
+        <tr>
+          <th></th>
+          <th class="month-btn has-data" id="repairingmc-btn-apr26" onclick="window.toggleDetail_repairingmc(&#39;apr26&#39;)">Apr-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-may26" onclick="window.toggleDetail_repairingmc(&#39;may26&#39;)">May-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-jun26" onclick="window.toggleDetail_repairingmc(&#39;jun26&#39;)">Jun-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-jul26" onclick="window.toggleDetail_repairingmc(&#39;jul26&#39;)">Jul-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-aug26" onclick="window.toggleDetail_repairingmc(&#39;aug26&#39;)">Aug-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-sep26" onclick="window.toggleDetail_repairingmc(&#39;sep26&#39;)">Sep-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-oct26" onclick="window.toggleDetail_repairingmc(&#39;oct26&#39;)">Oct-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-nov26" onclick="window.toggleDetail_repairingmc(&#39;nov26&#39;)">Nov-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-dec26" onclick="window.toggleDetail_repairingmc(&#39;dec26&#39;)">Dec-26</th>
+          <th class="month-btn has-data" id="repairingmc-btn-jan27" onclick="window.toggleDetail_repairingmc(&#39;jan27&#39;)">Jan-27</th>
+          <th class="month-btn has-data" id="repairingmc-btn-feb27" onclick="window.toggleDetail_repairingmc(&#39;feb27&#39;)">Feb-27</th>
+          <th class="month-btn has-data" id="repairingmc-btn-mar27" onclick="window.toggleDetail_repairingmc(&#39;mar27&#39;)">Mar-27</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="repairingmc-bp-apr26">$ –</td><td id="repairingmc-bp-may26">$ –</td><td id="repairingmc-bp-jun26">$ –</td>
+          <td id="repairingmc-bp-jul26">$ –</td><td id="repairingmc-bp-aug26">$ –</td><td id="repairingmc-bp-sep26">$ –</td>
+          <td id="repairingmc-bp-oct26">$ –</td><td id="repairingmc-bp-nov26">$ –</td><td id="repairingmc-bp-dec26">$ –</td>
+          <td id="repairingmc-bp-jan27">$ –</td><td id="repairingmc-bp-feb27">$ –</td><td id="repairingmc-bp-mar27">$ –</td>
+          <td class="total-col bp" id="repairingmc-bp-total">$ –</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="repairingmc-fc-apr26">$ 0</td><td id="repairingmc-fc-may26">$ 0</td><td id="repairingmc-fc-jun26">$ 0</td>
+          <td id="repairingmc-fc-jul26">$ 0</td><td id="repairingmc-fc-aug26">$ 0</td><td id="repairingmc-fc-sep26">$ 0</td>
+          <td id="repairingmc-fc-oct26">$ 0</td><td id="repairingmc-fc-nov26">$ 0</td><td id="repairingmc-fc-dec26">$ 0</td>
+          <td id="repairingmc-fc-jan27">$ 0</td><td id="repairingmc-fc-feb27">$ 0</td><td id="repairingmc-fc-mar27">$ 0</td>
+          <td class="total-col fc" id="repairingmc-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="repairingmc-pct-apr26">0%</td><td id="repairingmc-pct-may26">0%</td><td id="repairingmc-pct-jun26">0%</td>
+          <td id="repairingmc-pct-jul26">0%</td><td id="repairingmc-pct-aug26">0%</td><td id="repairingmc-pct-sep26">0%</td>
+          <td id="repairingmc-pct-oct26">0%</td><td id="repairingmc-pct-nov26">0%</td><td id="repairingmc-pct-dec26">0%</td>
+          <td id="repairingmc-pct-jan27">0%</td><td id="repairingmc-pct-feb27">0%</td><td id="repairingmc-pct-mar27">0%</td>
+          <td class="total-col pct" id="repairingmc-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DETAIL PANELS -->
+  <div class="detail-panel" id="repairingmc-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-apr26">Opening Balance: <span>$ 48,570</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;apr26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-may26">Opening Balance: <span>$ 38,478.96</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;may26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-jun26">Opening Balance: <span>$ 19,167.33</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;jun26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-jul26">Opening Balance: <span>$ 40,713.16</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;jul26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-aug26">Opening Balance: <span>$ 37,690.29</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;aug26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-sep26">Opening Balance: <span>$ 52,238.37</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;sep26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-oct26">Opening Balance: <span>$ 29,270</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;oct26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-nov26"><div class="detail-inner"><div class="detail-header"><h3>📋 November 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-nov26">Opening Balance: <span>$ 66,451.47</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;nov26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-nov26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-dec26"><div class="detail-inner"><div class="detail-header"><h3>📋 December 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-dec26">Opening Balance: <span>$ 64,009.29</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;dec26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-dec26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-jan27"><div class="detail-inner"><div class="detail-header"><h3>📋 January 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-jan27">Opening Balance: <span>$ 70,596.24</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;jan27&#39;)">✕ Close</div></div></div><div id="repairingmc-body-jan27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-feb27"><div class="detail-inner"><div class="detail-header"><h3>📋 February 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-feb27">Opening Balance: <span>$ 23,524.29</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;feb27&#39;)">✕ Close</div></div></div><div id="repairingmc-body-feb27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-mar27"><div class="detail-inner"><div class="detail-header"><h3>📋 March 2027</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-mar27">Opening Balance: <span>$ 36,438.41</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;mar27&#39;)">✕ Close</div></div></div><div id="repairingmc-body-mar27"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+</div>
+
+<!-- ══ QUARTERLY ══ -->
+<div class="section">
+  <div class="section-label q">📊 Quarterly</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>Q1</th><th>Q2</th><th>SMT1</th><th>Q3</th><th>Q4</th><th>SMT2</th><th>TOTAL</th></tr></thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP 2026</td>
+          <td id="repairingmc-bp-q1">$ –</td><td id="repairingmc-bp-q2">$ –</td><td id="repairingmc-bp-smt1">$ –</td>
+          <td id="repairingmc-bp-q3">$ –</td><td id="repairingmc-bp-q4">$ –</td><td id="repairingmc-bp-smt2">$ –</td>
+          <td class="total-col bp" id="repairingmc-bp-total">$ 527,147.8</td>
+        </tr>
+        <tr class="row-fc">
+          <td>FC/ACTUAL</td>
+          <td id="repairingmc-q-fc-q1">$ –</td><td id="repairingmc-q-fc-q2">$ –</td><td id="repairingmc-q-fc-smt1">$ –</td>
+          <td id="repairingmc-q-fc-q3">$ –</td><td id="repairingmc-q-fc-q4">$ –</td><td id="repairingmc-q-fc-smt2">$ –</td>
+          <td class="total-col fc" id="repairingmc-q-fc-total">$ –</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="repairingmc-q-pct-q1">–</td><td id="repairingmc-q-pct-q2">–</td><td id="repairingmc-q-pct-smt1">–</td>
+          <td id="repairingmc-q-pct-q3">–</td><td id="repairingmc-q-pct-q4">–</td><td id="repairingmc-q-pct-smt2">–</td>
+          <td class="total-col pct" id="repairingmc-q-pct-total">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ YEAR TO DATE ══ -->
+<div class="section">
+  <div class="section-label ytd">📈 Year To Date</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>YEARLY</th>
+          <th>Apr-26</th><th>May-26</th><th>Jun-26</th><th>Jul-26</th>
+          <th>Aug-26</th><th>Sep-26</th><th>Oct-26</th><th>Nov-26</th>
+          <th>Dec-26</th><th>Jan-27</th><th>Feb-27</th><th>Mar-27</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bp">
+          <td>BP</td>
+          <td id="repairingmc-ytdbp-apr26">–</td><td id="repairingmc-ytdbp-may26">–</td><td id="repairingmc-ytdbp-jun26">–</td><td id="repairingmc-ytdbp-jul26">–</td>
+          <td id="repairingmc-ytdbp-aug26">–</td><td id="repairingmc-ytdbp-sep26">–</td><td id="repairingmc-ytdbp-oct26">–</td><td id="repairingmc-ytdbp-nov26">–</td>
+          <td id="repairingmc-ytdbp-dec26">–</td><td id="repairingmc-ytdbp-jan27">–</td><td id="repairingmc-ytdbp-feb27">–</td><td id="repairingmc-ytdbp-mar27">–</td>
+        </tr>
+        <tr class="row-fc">
+          <td>ACTUAL</td>
+          <td id="repairingmc-ytd-apr26">–</td><td id="repairingmc-ytd-may26">–</td><td id="repairingmc-ytd-jun26">–</td><td id="repairingmc-ytd-jul26">–</td>
+          <td id="repairingmc-ytd-aug26">–</td><td id="repairingmc-ytd-sep26">–</td><td id="repairingmc-ytd-oct26">–</td><td id="repairingmc-ytd-nov26">–</td>
+          <td id="repairingmc-ytd-dec26">–</td><td id="repairingmc-ytd-jan27">–</td><td id="repairingmc-ytd-feb27">–</td><td id="repairingmc-ytd-mar27">–</td>
+        </tr>
+        <tr class="row-pct">
+          <td>PERCENTAGE</td>
+          <td id="repairingmc-var-apr26">–</td><td id="repairingmc-var-may26">–</td><td id="repairingmc-var-jun26">–</td><td id="repairingmc-var-jul26">–</td>
+          <td id="repairingmc-var-aug26">–</td><td id="repairingmc-var-sep26">–</td><td id="repairingmc-var-oct26">–</td><td id="repairingmc-var-nov26">–</td>
+          <td id="repairingmc-var-dec26">–</td><td id="repairingmc-var-jan27">–</td><td id="repairingmc-var-feb27">–</td><td id="repairingmc-var-mar27">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════
+var currentDashboard = null;
+
+function showDashboard(id) {
+  document.getElementById('menu-page').style.display = 'none';
+  document.querySelectorAll('.dashboard-page').forEach(function(p){ p.style.display='none'; });
+  document.getElementById(id + '-dashboard').style.display = 'block';
+  document.getElementById('back-btn').classList.add('visible');
+  var corner = document.getElementById('upload-corner');
+  corner.style.display = 'block';
+  // Wire upload button to the right input
+  document.getElementById('upload-corner-btn').onclick = function() {
+    document.getElementById(id + '-excelInput').click();
+  };
+  currentDashboard = id;
+  window.scrollTo(0,0);
+}
+
+function showMenu() {
+  document.querySelectorAll('.dashboard-page').forEach(function(p){ p.style.display='none'; });
+  document.getElementById('menu-page').style.display = 'flex';
+  document.getElementById('back-btn').classList.remove('visible');
+  document.getElementById('upload-corner').style.display = 'none';
+  currentDashboard = null;
+  window.scrollTo(0,0);
+}
+
+// Shared toast (all dashboards use this)
+var _toastTimer;
+function globalShowToast(msg, type) {
+  var t = document.getElementById('global-statusBar');
+  t.textContent = msg;
+  t.className = 'status-bar ' + (type||'') + ' show';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 4000);
+}
+
+// ═══════════════════════════════════
+// ALL DASHBOARD SCRIPTS
+// ═══════════════════════════════════
+
+
+(function() {
+
+(function() {
+// ══════════ BUILDING DASHBOARD ══════════
+// ═══════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════
+const MONTH_MAP = [
+  { key:'apr26', keywords:['april','apr'],   label:'April 2026',     bp:null },
+  { key:'may26', keywords:['may'],            label:'May 2026',       bp:null },
+  { key:'jun26', keywords:['june','jun'],     label:'June 2026',      bp:null },
+  { key:'jul26', keywords:['july','jul'],     label:'July 2026',      bp:null },
+  { key:'aug26', keywords:['august','aug'],   label:'August 2026',    bp:null },
+  { key:'sep26', keywords:['sept','sep'],     label:'September 2026', bp:null },
+  { key:'oct26', keywords:['october','oct'],  label:'October 2026',   bp:null },
+  { key:'nov26', keywords:['november','nov'], label:'November 2026',  bp:null },
+  { key:'dec26', keywords:['december','dec'], label:'December 2026',  bp:null },
+  { key:'jan27', keywords:['january','jan'],  label:'January 2027',   bp:null },
+  { key:'feb27', keywords:['february','feb'], label:'February 2027',  bp:null },
+  { key:'mar27', keywords:['march','mar'],    label:'March 2027',     bp:null },
+];
+
+// BP values are read from Excel — calculated dynamically after upload
+function getBP_building(key) { var m = MONTH_MAP.find(function(x){ return x.key===key; }); return (m && m.bp) ? m.bp : 0; }
+function getTotalBP_building() { return MONTH_MAP.reduce(function(s,m){ return s + (m.bp||0); }, 0); }
+function getBPCum_building(key) {
+  var cum = 0;
+  for (var i=0; i<MONTH_MAP.length; i++) {
+    cum += MONTH_MAP[i].bp || 0;
+    if (MONTH_MAP[i].key === key) return cum;
+  }
+  return 0;
+}
+function getBPQ_building(keys) { return keys.reduce(function(s,k){ return s + getBP_building(k); }, 0); }
+
+var appData_building = { months: {} };
+
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function fmt_building(n) {
+  if (n === null || n === undefined || isNaN(n)) return '$ –';
+  return '$ ' + Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function fmtPlain_building(n) {
+  if (n === null || isNaN(n)) return '–';
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function matchMonth_building(name) {
+  const l = name.toLowerCase();
+  return MONTH_MAP.find(m => m.keywords.some(k => l.includes(k)));
+}
+
+// ═══════════════════════════════════
+// EXCEL UPLOAD
+// ═══════════════════════════════════
+function handleExcel_building(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showToast_building('⏳ Reading ' + file.name + '...', 'yellow');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const matched = [], unmatched = [];
+
+      wb.SheetNames.forEach(function(sheetName) {
+        const month = matchMonth_building(sheetName);
+        if (!month) { unmatched.push(sheetName); return; }
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
+        if (!rows.length) { unmatched.push(sheetName + ' (empty)'); return; }
+        processRows_building(month, rows);
+        matched.push(sheetName);
+      });
+
+      updateAllUI_building();
+      event.target.value = '';
+
+      if (matched.length === 0) {
+        showToast_building('⚠ No sheets matched! Sheet names: ' + wb.SheetNames.join(', '), 'yellow');
+      } else {
+        showToast_building('✅ ' + matched.length + ' month(s) loaded: ' + matched.join(', '), 'green');
+      }
+
+    } catch(err) {
+      showToast_building('❌ Error: ' + err.message, 'red');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function processRows_building(month, rows) {
+  const keys = Object.keys(rows[0]);
+  const col = {
+    noReq:    keys.find(function(k){ return /no.?req/i.test(k); })               || keys[0],
+    costCen:  keys.find(function(k){ return /cost.?cen/i.test(k); })             || keys[1],
+    progress: keys.find(function(k){ return /progress|leadtime/i.test(k); })     || keys[2],
+    poNo:     keys.find(function(k){ return /po.?no/i.test(k); })                || keys[3],
+    grDate:   keys.find(function(k){ return /gr.?date|date/i.test(k); })         || keys[4],
+    itemDesc: keys.find(function(k){ return /item|description|desc/i.test(k); }) || keys[5],
+    amount:   keys.find(function(k){ return /amount|amt/i.test(k); })            || keys[6],
+    balance:  keys.find(function(k){ return /balance|bal/i.test(k); })           || keys[7],
+    remark:   keys.find(function(k){ return /remark|note/i.test(k); })           || keys[8],
+  };
+
+  // Read BP = first non-zero Balance value found in any row (opening balance)
+  var bpValue = null;
+  for (var i=0; i<rows.length; i++) {
+    var bal = parseFloat(String(rows[i][col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(bal) && bal > 0) { bpValue = bal; break; }
+  }
+  // Update MONTH_MAP bp for this month
+  if (bpValue !== null) {
+    var mapEntry = MONTH_MAP.find(function(m){ return m.key === month.key; });
+    if (mapEntry) mapEntry.bp = bpValue;
+  }
+
+  const validRows = rows.filter(function(r) {
+    const v    = String(r[col.noReq]    || '').trim();
+    const desc = String(r[col.itemDesc] || '').trim();
+    if (!v) return false;
+    if (v === '#N/A' || desc === '#N/A') return false;
+    if (/^total$/i.test(v))    return false;
+    if (/^balance$/i.test(v))  return false;
+    if (/^no.?req$/i.test(v))  return false;
+    if (/^forecast/i.test(v))  return false;
+    if (/^summary/i.test(v))   return false;
+    if (/^item.?desc/i.test(desc)) return false;
+    return true;
+  });
+
+  var totalAmt = 0;
+  const cleanRows = validRows.map(function(r) {
+    const amt = parseFloat(String(r[col.amount]  || '').replace(/[^0-9.-]/g, ''));
+    const bal = parseFloat(String(r[col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(amt)) totalAmt += amt;
+    return {
+      noReq:    String(r[col.noReq]    || ''),
+      costCen:  String(r[col.costCen]  || ''),
+      progress: String(r[col.progress] || ''),
+      poNo:     String(r[col.poNo]     || ''),
+      grDate:   String(r[col.grDate]   || ''),
+      itemDesc: String(r[col.itemDesc] || ''),
+      amount:   isNaN(amt) ? null : amt,
+      balance:  isNaN(bal) ? null : bal,
+      remark:   String(r[col.remark]   || ''),
+    };
+  });
+
+  const lastBal = cleanRows.length ? cleanRows[cleanRows.length - 1].balance : null;
+  appData_building.months[month.key] = { rows: cleanRows, totalAmt: totalAmt, lastBal: lastBal };
+}
+
+// ═══════════════════════════════════
+// RENDER UI
+// ═══════════════════════════════════
+function updateAllUI_building() {
+  // Refresh BP cells from MONTH_MAP (now read from Excel)
+  MONTH_MAP.forEach(function(m) {
+    var bpEl = document.getElementById('building-bp-' + m.key);
+    if (bpEl) bpEl.textContent = m.bp ? fmt_building(m.bp) : '$ –';
+  });
+
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_building.months[m.key];
+    if (!d) return;
+    renderMonthTable_building(m, d);
+    var fcEl  = document.getElementById('building-fc-'  + m.key);
+    var pctEl = document.getElementById('building-pct-' + m.key);
+    if (fcEl)  fcEl.textContent  = fmt_building(d.totalAmt);
+    if (pctEl) pctEl.textContent = m.bp > 0 ? Math.round((d.totalAmt / m.bp) * 100) + '%' : '–';
+    var btn = document.getElementById('building-btn-' + m.key);
+    if (btn) btn.classList.add('has-data');
+  });
+
+  // YTD
+  var cum = 0;
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_building.months[m.key];
+    if (!d) return;
+    cum += d.totalAmt;
+    var ytd = document.getElementById('building-ytd-' + m.key);
+    var vr  = document.getElementById('building-var-' + m.key);
+    var ytdbp = document.getElementById('building-ytdbp-' + m.key);
+    var bpCum = getBPCum_building(m.key);
+    if (ytd) ytd.textContent = fmtPlain_building(cum);
+    if (vr)  vr.textContent  = bpCum > 0 ? Math.round((cum / bpCum) * 100) + '%' : '–';
+    if (ytdbp) ytdbp.textContent = fmtPlain_building(bpCum);
+  });
+
+  // Quarterly
+  function a(k) { return appData_building.months[k] ? appData_building.months[k].totalAmt : 0; }
+  var q1=a('apr26')+a('may26')+a('jun26'), q2=a('jul26')+a('aug26')+a('sep26');
+  var q3=a('oct26')+a('nov26')+a('dec26'), q4=a('jan27')+a('feb27')+a('mar27');
+  var smt1=q1+q2, smt2=q3+q4, total=smt1+smt2;
+
+  // Update quarterly BP cells too
+  var bpQ1=getBPQ_building(['apr26','may26','jun26']), bpQ2=getBPQ_building(['jul26','aug26','sep26']);
+  var bpQ3=getBPQ_building(['oct26','nov26','dec26']), bpQ4=getBPQ_building(['jan27','feb27','mar27']);
+  var bpSmt1=bpQ1+bpQ2, bpSmt2=bpQ3+bpQ4;
+  var bpQEl;
+  bpQEl = document.getElementById('building-bp-q1');   if(bpQEl) bpQEl.textContent = bpQ1   ? fmt_building(bpQ1)   : '$ –';
+  bpQEl = document.getElementById('building-bp-q2');   if(bpQEl) bpQEl.textContent = bpQ2   ? fmt_building(bpQ2)   : '$ –';
+  bpQEl = document.getElementById('building-bp-smt1'); if(bpQEl) bpQEl.textContent = bpSmt1 ? fmt_building(bpSmt1) : '$ –';
+  bpQEl = document.getElementById('building-bp-q3');   if(bpQEl) bpQEl.textContent = bpQ3   ? fmt_building(bpQ3)   : '$ –';
+  bpQEl = document.getElementById('building-bp-q4');   if(bpQEl) bpQEl.textContent = bpQ4   ? fmt_building(bpQ4)   : '$ –';
+  bpQEl = document.getElementById('building-bp-smt2'); if(bpQEl) bpQEl.textContent = bpSmt2 ? fmt_building(bpSmt2) : '$ –';
+
+  function setQ(fid, pid, val, bp) {
+    var f=document.getElementById(fid), p=document.getElementById(pid);
+    if (f) f.textContent = val>0 ? fmt_building(val) : '$ –';
+    if (p) p.textContent = bp&&val>0 ? Math.round((val/bp)*100)+'%' : '–';
+  }
+  setQ('building-q-fc-q1','building-q-pct-q1',q1,bpQ1);
+  setQ('building-q-fc-q2','building-q-pct-q2',q2,bpQ2);
+  setQ('building-q-fc-smt1','building-q-pct-smt1',smt1,bpSmt1);
+  setQ('building-q-fc-q3','building-q-pct-q3',q3,bpQ3);
+  setQ('building-q-fc-q4','building-q-pct-q4',q4,bpQ4);
+  setQ('building-q-fc-smt2','building-q-pct-smt2',smt2,bpSmt2);
+  setQ('building-q-fc-total','building-q-pct-total',total,getTotalBP_building());
+
+  // Update BP TOTAL column (sum of all months)
+  var totalBP = getTotalBP_building();
+  var bpTotals = document.getElementById('building-dashboard').querySelectorAll('[id="building-bp-total"]');
+  bpTotals.forEach(function(el){ el.textContent = totalBP > 0 ? fmt_building(totalBP) : '$ –'; });
+
+  var ft=document.getElementById('building-fc-total'), pt=document.getElementById('building-pct-total');
+  if (ft) ft.textContent = total>0 ? fmt_building(total) : '$ –';
+  if (pt) pt.textContent = totalBP>0 && total>0 ? Math.round((total/totalBP)*100)+'%' : '–';
+}
+
+function renderMonthTable_building(month, d) {
+  const balEl = document.getElementById('building-bal-' + month.key);
+  if (balEl) balEl.innerHTML = 'Opening Balance: <span>' + fmt_building(month.bp) + '</span>';
+
+  var html = '<div class="detail-table-wrap"><table class="detail-table">'
+    + '<thead><tr>'
+    + '<th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th>'
+    + '<th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th>'
+    + '<th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th>'
+    + '</tr></thead><tbody>';
+
+  d.rows.forEach(function(r) {
+    html += '<tr>'
+      + '<td>' + r.noReq + '</td>'
+      + '<td>' + r.costCen + '</td>'
+      + '<td class="muted">' + r.progress + '</td>'
+      + '<td class="muted">' + r.poNo + '</td>'
+      + '<td class="muted">' + r.grDate + '</td>'
+      + '<td class="desc">'  + r.itemDesc + '</td>'
+      + '<td class="amt">'   + (r.amount  !== null ? fmt_building(r.amount)  : '$ –') + '</td>'
+      + '<td class="bal">'   + (r.balance !== null ? fmt_building(r.balance) : '–')   + '</td>'
+      + '<td class="muted">' + r.remark + '</td>'
+      + '</tr>';
+  });
+
+  html += '</tbody><tfoot><tr>'
+    + '<td colspan="6">TOTAL</td>'
+    + '<td class="f-amt">' + fmt_building(d.totalAmt) + '</td>'
+    + '<td class="f-bal">' + (d.lastBal !== null ? fmt_building(d.lastBal) : '–') + '</td>'
+    + '<td></td></tr></tfoot></table></div>';
+
+  document.getElementById('building-body-' + month.key).innerHTML = html;
+}
+
+// ═══════════════════════════════════
+// TOGGLE DETAIL
+// ═══════════════════════════════════
+function toggleDetail_building(month) {
+  var panel = document.getElementById('building-detail-' + month);
+  var btn   = document.getElementById('building-btn-' + month);
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  // Close all other panels first
+  document.getElementById('building-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
+    p.classList.remove('open');
+  });
+  document.getElementById('building-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  // Toggle clicked panel
+  if (!isOpen) {
+    panel.classList.add('open');
+    if (btn) btn.classList.add('active');
+    setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
+  }
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast_building(msg, type) {
+  globalShowToast(msg, type);
+}
+
+// ═══════════════════════════════════
+// AUTO LOAD IF PRELOADED DATA EXISTS
+// ═══════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_BUILDING__ && window.__PRELOADED_BUILDING__.months) {
+    appData_building = window.__PRELOADED_BUILDING__;
+    updateAllUI_building();
+    const count = Object.keys(appData_building.months).length;
+    showToast_building('✅ ' + count + ' month(s) loaded', 'green');
+  }
+});
+
+  // Expose to global scope
+  window.handleExcel_building = handleExcel_building;
+  window.toggleDetail_building = toggleDetail_building;
+  window.toggleAllDetails_building = function() {
+    var panels = document.getElementById('building-dashboard').querySelectorAll('.detail-panel');
+    var anyOpen = Array.from(panels).some(function(p){ return p.classList.contains('open'); });
+    panels.forEach(function(p) {
+      var key = p.id.replace('building-detail-','');
+      var mb = document.getElementById('building-btn-' + key);
+      if (anyOpen) { p.classList.remove('open'); if(mb) mb.classList.remove('active'); }
+      else         { p.classList.add('open');    if(mb) mb.classList.add('active'); }
+    });
+  };
+})();
+
+(function() {
+})();
+
+(function() {
+// ══════════ INDIRECT DASHBOARD ══════════
+// ═══════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════
+const MONTH_MAP = [
+  { key:'apr26', keywords:['april','apr'],   label:'April 2026',     bp:null },
+  { key:'may26', keywords:['may'],            label:'May 2026',       bp:null },
+  { key:'jun26', keywords:['june','jun'],     label:'June 2026',      bp:null },
+  { key:'jul26', keywords:['july','jul'],     label:'July 2026',      bp:null },
+  { key:'aug26', keywords:['august','aug'],   label:'August 2026',    bp:null },
+  { key:'sep26', keywords:['sept','sep'],     label:'September 2026', bp:null },
+  { key:'oct26', keywords:['october','oct'],  label:'October 2026',   bp:null },
+  { key:'nov26', keywords:['november','nov'], label:'November 2026',  bp:null },
+  { key:'dec26', keywords:['december','dec'], label:'December 2026',  bp:null },
+  { key:'jan27', keywords:['january','jan'],  label:'January 2027',   bp:null },
+  { key:'feb27', keywords:['february','feb'], label:'February 2027',  bp:null },
+  { key:'mar27', keywords:['march','mar'],    label:'March 2027',     bp:null },
+];
+
+// BP values are read from Excel — calculated dynamically after upload
+function getBP_indirect(key) { var m = MONTH_MAP.find(function(x){ return x.key===key; }); return (m && m.bp) ? m.bp : 0; }
+function getTotalBP_indirect() { return MONTH_MAP.reduce(function(s,m){ return s + (m.bp||0); }, 0); }
+function getBPCum_indirect(key) {
+  var cum = 0;
+  for (var i=0; i<MONTH_MAP.length; i++) {
+    cum += MONTH_MAP[i].bp || 0;
+    if (MONTH_MAP[i].key === key) return cum;
+  }
+  return 0;
+}
+function getBPQ_indirect(keys) { return keys.reduce(function(s,k){ return s + getBP_indirect(k); }, 0); }
+
+var appData_indirect = { months: {} };
+
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function fmt_indirect(n) {
+  if (n === null || n === undefined || isNaN(n)) return '$ –';
+  return '$ ' + Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function fmtPlain_indirect(n) {
+  if (n === null || isNaN(n)) return '–';
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function matchMonth_indirect(name) {
+  const l = name.toLowerCase();
+  return MONTH_MAP.find(m => m.keywords.some(k => l.includes(k)));
+}
+
+// ═══════════════════════════════════
+// EXCEL UPLOAD
+// ═══════════════════════════════════
+function handleExcel_indirect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showToast_indirect('⏳ Reading ' + file.name + '...', 'yellow');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const matched = [], unmatched = [];
+
+      wb.SheetNames.forEach(function(sheetName) {
+        const month = matchMonth_indirect(sheetName);
+        if (!month) { unmatched.push(sheetName); return; }
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
+        if (!rows.length) { unmatched.push(sheetName + ' (empty)'); return; }
+        processRows_indirect(month, rows);
+        matched.push(sheetName);
+      });
+
+      updateAllUI_indirect();
+      event.target.value = '';
+
+      if (matched.length === 0) {
+        showToast_indirect('⚠ No sheets matched! Sheet names: ' + wb.SheetNames.join(', '), 'yellow');
+      } else {
+        showToast_indirect('✅ ' + matched.length + ' month(s) loaded: ' + matched.join(', '), 'green');
+      }
+
+    } catch(err) {
+      showToast_indirect('❌ Error: ' + err.message, 'red');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function processRows_indirect(month, rows) {
+  const keys = Object.keys(rows[0]);
+  const col = {
+    noReq:    keys.find(function(k){ return /no.?req/i.test(k); })               || keys[0],
+    costCen:  keys.find(function(k){ return /cost.?cen/i.test(k); })             || keys[1],
+    progress: keys.find(function(k){ return /progress|leadtime/i.test(k); })     || keys[2],
+    poNo:     keys.find(function(k){ return /po.?no/i.test(k); })                || keys[3],
+    grDate:   keys.find(function(k){ return /gr.?date|date/i.test(k); })         || keys[4],
+    itemDesc: keys.find(function(k){ return /item|description|desc/i.test(k); }) || keys[5],
+    amount:   keys.find(function(k){ return /amount|amt/i.test(k); })            || keys[6],
+    balance:  keys.find(function(k){ return /balance|bal/i.test(k); })           || keys[7],
+    remark:   keys.find(function(k){ return /remark|note/i.test(k); })           || keys[8],
+  };
+
+  // Read BP = first non-zero Balance value found in any row (opening balance)
+  var bpValue = null;
+  for (var i=0; i<rows.length; i++) {
+    var bal = parseFloat(String(rows[i][col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(bal) && bal > 0) { bpValue = bal; break; }
+  }
+  // Update MONTH_MAP bp for this month
+  if (bpValue !== null) {
+    var mapEntry = MONTH_MAP.find(function(m){ return m.key === month.key; });
+    if (mapEntry) mapEntry.bp = bpValue;
+  }
+
+  const validRows = rows.filter(function(r) {
+    const v    = String(r[col.noReq]    || '').trim();
+    const desc = String(r[col.itemDesc] || '').trim();
+    if (!v) return false;
+    if (v === '#N/A' || desc === '#N/A') return false;
+    if (/^total$/i.test(v))    return false;
+    if (/^balance$/i.test(v))  return false;
+    if (/^no.?req$/i.test(v))  return false;
+    if (/^forecast/i.test(v))  return false;
+    if (/^summary/i.test(v))   return false;
+    if (/^item.?desc/i.test(desc)) return false;
+    return true;
+  });
+
+  var totalAmt = 0;
+  const cleanRows = validRows.map(function(r) {
+    const amt = parseFloat(String(r[col.amount]  || '').replace(/[^0-9.-]/g, ''));
+    const bal = parseFloat(String(r[col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(amt)) totalAmt += amt;
+    return {
+      noReq:    String(r[col.noReq]    || ''),
+      costCen:  String(r[col.costCen]  || ''),
+      progress: String(r[col.progress] || ''),
+      poNo:     String(r[col.poNo]     || ''),
+      grDate:   String(r[col.grDate]   || ''),
+      itemDesc: String(r[col.itemDesc] || ''),
+      amount:   isNaN(amt) ? null : amt,
+      balance:  isNaN(bal) ? null : bal,
+      remark:   String(r[col.remark]   || ''),
+    };
+  });
+
+  const lastBal = cleanRows.length ? cleanRows[cleanRows.length - 1].balance : null;
+  appData_indirect.months[month.key] = { rows: cleanRows, totalAmt: totalAmt, lastBal: lastBal };
+}
+
+// ═══════════════════════════════════
+// RENDER UI
+// ═══════════════════════════════════
+function updateAllUI_indirect() {
+  MONTH_MAP.forEach(function(m) {
+    var bpEl = document.getElementById('indirect-bp-' + m.key);
+    if (bpEl) bpEl.textContent = m.bp ? fmt_indirect(m.bp) : '$ –';
+  });
+
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_indirect.months[m.key];
+    if (!d) return;
+    renderMonthTable_indirect(m, d);
+    var fcEl  = document.getElementById('indirect-fc-'  + m.key);
+    var pctEl = document.getElementById('indirect-pct-' + m.key);
+    if (fcEl)  fcEl.textContent  = fmt_indirect(d.totalAmt);
+    if (pctEl) pctEl.textContent = m.bp > 0 ? Math.round((d.totalAmt / m.bp) * 100) + '%' : '–';
+    var btn = document.getElementById('indirect-btn-' + m.key);
+    if (btn) btn.classList.add('has-data');
+  });
+
+  // YTD
+  var cum = 0;
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_indirect.months[m.key];
+    if (!d) return;
+    cum += d.totalAmt;
+    var ytd = document.getElementById('indirect-ytd-' + m.key);
+    var vr  = document.getElementById('indirect-var-' + m.key);
+    var ytdbp = document.getElementById('indirect-ytdbp-' + m.key);
+    var bpCum = getBPCum_indirect(m.key);
+    if (ytd) ytd.textContent = fmtPlain_indirect(cum);
+    if (vr)  vr.textContent  = bpCum > 0 ? Math.round((cum / bpCum) * 100) + '%' : '–';
+    if (ytdbp) ytdbp.textContent = fmtPlain_indirect(bpCum);
+  });
+
+  // Quarterly
+  function a(k) { return appData_indirect.months[k] ? appData_indirect.months[k].totalAmt : 0; }
+  var q1=a('apr26')+a('may26')+a('jun26'), q2=a('jul26')+a('aug26')+a('sep26');
+  var q3=a('oct26')+a('nov26')+a('dec26'), q4=a('jan27')+a('feb27')+a('mar27');
+  var smt1=q1+q2, smt2=q3+q4, total=smt1+smt2;
+
+  var bpQ1=getBPQ_indirect(['apr26','may26','jun26']), bpQ2=getBPQ_indirect(['jul26','aug26','sep26']);
+  var bpQ3=getBPQ_indirect(['oct26','nov26','dec26']), bpQ4=getBPQ_indirect(['jan27','feb27','mar27']);
+  var bpSmt1=bpQ1+bpQ2, bpSmt2=bpQ3+bpQ4;
+  var bpQEl;
+  bpQEl = document.getElementById('indirect-bp-q1');   if(bpQEl) bpQEl.textContent = bpQ1   ? fmt_indirect(bpQ1)   : '$ –';
+  bpQEl = document.getElementById('indirect-bp-q2');   if(bpQEl) bpQEl.textContent = bpQ2   ? fmt_indirect(bpQ2)   : '$ –';
+  bpQEl = document.getElementById('indirect-bp-smt1'); if(bpQEl) bpQEl.textContent = bpSmt1 ? fmt_indirect(bpSmt1) : '$ –';
+  bpQEl = document.getElementById('indirect-bp-q3');   if(bpQEl) bpQEl.textContent = bpQ3   ? fmt_indirect(bpQ3)   : '$ –';
+  bpQEl = document.getElementById('indirect-bp-q4');   if(bpQEl) bpQEl.textContent = bpQ4   ? fmt_indirect(bpQ4)   : '$ –';
+  bpQEl = document.getElementById('indirect-bp-smt2'); if(bpQEl) bpQEl.textContent = bpSmt2 ? fmt_indirect(bpSmt2) : '$ –';
+
+  function setQ(fid, pid, val, bp) {
+    var f=document.getElementById(fid), p=document.getElementById(pid);
+    if (f) f.textContent = val>0 ? fmt_indirect(val) : '$ –';
+    if (p) p.textContent = bp&&val>0 ? Math.round((val/bp)*100)+'%' : '–';
+  }
+  setQ('indirect-q-fc-q1','indirect-q-pct-q1',q1,bpQ1);
+  setQ('indirect-q-fc-q2','indirect-q-pct-q2',q2,bpQ2);
+  setQ('indirect-q-fc-smt1','indirect-q-pct-smt1',smt1,bpSmt1);
+  setQ('indirect-q-fc-q3','indirect-q-pct-q3',q3,bpQ3);
+  setQ('indirect-q-fc-q4','indirect-q-pct-q4',q4,bpQ4);
+  setQ('indirect-q-fc-smt2','indirect-q-pct-smt2',smt2,bpSmt2);
+  setQ('indirect-q-fc-total','indirect-q-pct-total',total,getTotalBP_indirect());
+
+  var totalBP = getTotalBP_indirect();
+  var bpTotals = document.getElementById('indirect-dashboard').querySelectorAll('[id="indirect-bp-total"]');
+  bpTotals.forEach(function(el){ el.textContent = totalBP > 0 ? fmt_indirect(totalBP) : '$ –'; });
+
+  var ft=document.getElementById('indirect-fc-total'), pt=document.getElementById('indirect-pct-total');
+  if (ft) ft.textContent = total>0 ? fmt_indirect(total) : '$ –';
+  if (pt) pt.textContent = totalBP>0 && total>0 ? Math.round((total/totalBP)*100)+'%' : '–';
+}
+
+function renderMonthTable_indirect(month, d) {
+  const balEl = document.getElementById('indirect-bal-' + month.key);
+  if (balEl) balEl.innerHTML = 'Opening Balance: <span>' + fmt_indirect(month.bp) + '</span>';
+
+  var html = '<div class="detail-table-wrap"><table class="detail-table">'
+    + '<thead><tr>'
+    + '<th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th>'
+    + '<th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th>'
+    + '<th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th>'
+    + '</tr></thead><tbody>';
+
+  d.rows.forEach(function(r) {
+    html += '<tr>'
+      + '<td>' + r.noReq + '</td>'
+      + '<td>' + r.costCen + '</td>'
+      + '<td class="muted">' + r.progress + '</td>'
+      + '<td class="muted">' + r.poNo + '</td>'
+      + '<td class="muted">' + r.grDate + '</td>'
+      + '<td class="desc">'  + r.itemDesc + '</td>'
+      + '<td class="amt">'   + (r.amount  !== null ? fmt_indirect(r.amount)  : '$ –') + '</td>'
+      + '<td class="bal">'   + (r.balance !== null ? fmt_indirect(r.balance) : '–')   + '</td>'
+      + '<td class="muted">' + r.remark + '</td>'
+      + '</tr>';
+  });
+
+  html += '</tbody><tfoot><tr>'
+    + '<td colspan="6">TOTAL</td>'
+    + '<td class="f-amt">' + fmt_indirect(d.totalAmt) + '</td>'
+    + '<td class="f-bal">' + (d.lastBal !== null ? fmt_indirect(d.lastBal) : '–') + '</td>'
+    + '<td></td></tr></tfoot></table></div>';
+
+  document.getElementById('indirect-body-' + month.key).innerHTML = html;
+}
+
+// ═══════════════════════════════════
+// TOGGLE DETAIL
+// ═══════════════════════════════════
+function toggleDetail_indirect(month) {
+  var panel = document.getElementById('indirect-detail-' + month);
+  var btn   = document.getElementById('indirect-btn-' + month);
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  // Close all other panels first
+  document.getElementById('indirect-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
+    p.classList.remove('open');
+  });
+  document.getElementById('indirect-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  // Toggle clicked panel
+  if (!isOpen) {
+    panel.classList.add('open');
+    if (btn) btn.classList.add('active');
+    setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
+  }
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast_indirect(msg, type) {
+  globalShowToast(msg, type);
+}
+
+// ═══════════════════════════════════
+// AUTO LOAD IF PRELOADED DATA EXISTS
+// ═══════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_INDIRECT__ && window.__PRELOADED_INDIRECT__.months) {
+    appData_indirect = window.__PRELOADED_INDIRECT__;
+    updateAllUI_indirect();
+    const count = Object.keys(appData_indirect.months).length;
+    showToast_indirect('✅ ' + count + ' month(s) loaded', 'green');
+  }
+});
+
+  // Expose to global scope
+  window.handleExcel_indirect = handleExcel_indirect;
+  window.toggleDetail_indirect = toggleDetail_indirect;
+  window.toggleAllDetails_indirect = function() {
+    var panels = document.getElementById('indirect-dashboard').querySelectorAll('.detail-panel');
+    var anyOpen = Array.from(panels).some(function(p){ return p.classList.contains('open'); });
+    panels.forEach(function(p) {
+      var key = p.id.replace('indirect-detail-','');
+      var mb = document.getElementById('indirect-btn-' + key);
+      if (anyOpen) { p.classList.remove('open'); if(mb) mb.classList.remove('active'); }
+      else         { p.classList.add('open');    if(mb) mb.classList.add('active'); }
+    });
+  };
+})();
+
+(function() {
+// ══════════ PERISHABLE TOOLS DASHBOARD ══════════
+// ═══════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════
+const MONTH_MAP = [
+  { key:'apr26', keywords:['april','apr'],   label:'April 2026',     bp:null },
+  { key:'may26', keywords:['may'],            label:'May 2026',       bp:null },
+  { key:'jun26', keywords:['june','jun'],     label:'June 2026',      bp:null },
+  { key:'jul26', keywords:['july','jul'],     label:'July 2026',      bp:null },
+  { key:'aug26', keywords:['august','aug'],   label:'August 2026',    bp:null },
+  { key:'sep26', keywords:['sept','sep'],     label:'September 2026', bp:null },
+  { key:'oct26', keywords:['october','oct'],  label:'October 2026',   bp:null },
+  { key:'nov26', keywords:['november','nov'], label:'November 2026',  bp:null },
+  { key:'dec26', keywords:['december','dec'], label:'December 2026',  bp:null },
+  { key:'jan27', keywords:['january','jan'],  label:'January 2027',   bp:null },
+  { key:'feb27', keywords:['february','feb'], label:'February 2027',  bp:null },
+  { key:'mar27', keywords:['march','mar'],    label:'March 2027',     bp:null },
+];
+
+// BP values are read from Excel — calculated dynamically after upload
+function getBP_perishable(key) { var m = MONTH_MAP.find(function(x){ return x.key===key; }); return (m && m.bp) ? m.bp : 0; }
+function getTotalBP_perishable() { return MONTH_MAP.reduce(function(s,m){ return s + (m.bp||0); }, 0); }
+function getBPCum_perishable(key) {
+  var cum = 0;
+  for (var i=0; i<MONTH_MAP.length; i++) {
+    cum += MONTH_MAP[i].bp || 0;
+    if (MONTH_MAP[i].key === key) return cum;
+  }
+  return 0;
+}
+function getBPQ_perishable(keys) { return keys.reduce(function(s,k){ return s + getBP_perishable(k); }, 0); }
+
+var appData_perishable = { months: {} };
+
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function fmt_perishable(n) {
+  if (n === null || n === undefined || isNaN(n)) return '$ –';
+  return '$ ' + Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function fmtPlain_perishable(n) {
+  if (n === null || isNaN(n)) return '–';
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function matchMonth_perishable(name) {
+  const l = name.toLowerCase();
+  return MONTH_MAP.find(m => m.keywords.some(k => l.includes(k)));
+}
+
+// ═══════════════════════════════════
+// EXCEL UPLOAD
+// ═══════════════════════════════════
+function handleExcel_perishable(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showToast_perishable('⏳ Reading ' + file.name + '...', 'yellow');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const matched = [], unmatched = [];
+
+      wb.SheetNames.forEach(function(sheetName) {
+        const month = matchMonth_perishable(sheetName);
+        if (!month) { unmatched.push(sheetName); return; }
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
+        if (!rows.length) { unmatched.push(sheetName + ' (empty)'); return; }
+        processRows_perishable(month, rows);
+        matched.push(sheetName);
+      });
+
+      updateAllUI_perishable();
+      event.target.value = '';
+
+      if (matched.length === 0) {
+        showToast_perishable('⚠ No sheets matched! Sheet names: ' + wb.SheetNames.join(', '), 'yellow');
+      } else {
+        showToast_perishable('✅ ' + matched.length + ' month(s) loaded: ' + matched.join(', '), 'green');
+      }
+
+    } catch(err) {
+      showToast_perishable('❌ Error: ' + err.message, 'red');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function processRows_perishable(month, rows) {
+  const keys = Object.keys(rows[0]);
+  const col = {
+    noReq:    keys.find(function(k){ return /no.?req/i.test(k); })               || keys[0],
+    costCen:  keys.find(function(k){ return /cost.?cen/i.test(k); })             || keys[1],
+    progress: keys.find(function(k){ return /progress|leadtime/i.test(k); })     || keys[2],
+    poNo:     keys.find(function(k){ return /po.?no/i.test(k); })                || keys[3],
+    grDate:   keys.find(function(k){ return /gr.?date|date/i.test(k); })         || keys[4],
+    itemDesc: keys.find(function(k){ return /item|description|desc/i.test(k); }) || keys[5],
+    amount:   keys.find(function(k){ return /amount|amt/i.test(k); })            || keys[6],
+    balance:  keys.find(function(k){ return /balance|bal/i.test(k); })           || keys[7],
+    remark:   keys.find(function(k){ return /remark|note/i.test(k); })           || keys[8],
+  };
+
+  // Read BP = first non-zero Balance value found in any row (opening balance)
+  var bpValue = null;
+  for (var i=0; i<rows.length; i++) {
+    var bal = parseFloat(String(rows[i][col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(bal) && bal > 0) { bpValue = bal; break; }
+  }
+  // Update MONTH_MAP bp for this month
+  if (bpValue !== null) {
+    var mapEntry = MONTH_MAP.find(function(m){ return m.key === month.key; });
+    if (mapEntry) mapEntry.bp = bpValue;
+  }
+
+  const validRows = rows.filter(function(r) {
+    const v    = String(r[col.noReq]    || '').trim();
+    const desc = String(r[col.itemDesc] || '').trim();
+    if (!v) return false;
+    if (v === '#N/A' || desc === '#N/A') return false;
+    if (/^total$/i.test(v))    return false;
+    if (/^balance$/i.test(v))  return false;
+    if (/^no.?req$/i.test(v))  return false;
+    if (/^forecast/i.test(v))  return false;
+    if (/^summary/i.test(v))   return false;
+    if (/^item.?desc/i.test(desc)) return false;
+    return true;
+  });
+
+  var totalAmt = 0;
+  const cleanRows = validRows.map(function(r) {
+    const amt = parseFloat(String(r[col.amount]  || '').replace(/[^0-9.-]/g, ''));
+    const bal = parseFloat(String(r[col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(amt)) totalAmt += amt;
+    return {
+      noReq:    String(r[col.noReq]    || ''),
+      costCen:  String(r[col.costCen]  || ''),
+      progress: String(r[col.progress] || ''),
+      poNo:     String(r[col.poNo]     || ''),
+      grDate:   String(r[col.grDate]   || ''),
+      itemDesc: String(r[col.itemDesc] || ''),
+      amount:   isNaN(amt) ? null : amt,
+      balance:  isNaN(bal) ? null : bal,
+      remark:   String(r[col.remark]   || ''),
+    };
+  });
+
+  const lastBal = cleanRows.length ? cleanRows[cleanRows.length - 1].balance : null;
+  appData_perishable.months[month.key] = { rows: cleanRows, totalAmt: totalAmt, lastBal: lastBal };
+}
+
+// ═══════════════════════════════════
+// RENDER UI
+// ═══════════════════════════════════
+function updateAllUI_perishable() {
+  MONTH_MAP.forEach(function(m) {
+    var bpEl = document.getElementById('perishable-bp-' + m.key);
+    if (bpEl) bpEl.textContent = m.bp ? fmt_perishable(m.bp) : '$ –';
+  });
+
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_perishable.months[m.key];
+    if (!d) return;
+    renderMonthTable_perishable(m, d);
+    var fcEl  = document.getElementById('perishable-fc-'  + m.key);
+    var pctEl = document.getElementById('perishable-pct-' + m.key);
+    if (fcEl)  fcEl.textContent  = fmt_perishable(d.totalAmt);
+    if (pctEl) pctEl.textContent = m.bp > 0 ? Math.round((d.totalAmt / m.bp) * 100) + '%' : '–';
+    var btn = document.getElementById('perishable-btn-' + m.key);
+    if (btn) btn.classList.add('has-data');
+  });
+
+  // YTD
+  var cum = 0;
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_perishable.months[m.key];
+    if (!d) return;
+    cum += d.totalAmt;
+    var ytd = document.getElementById('perishable-ytd-' + m.key);
+    var vr  = document.getElementById('perishable-var-' + m.key);
+    var ytdbp = document.getElementById('perishable-ytdbp-' + m.key);
+    var bpCum = getBPCum_perishable(m.key);
+    if (ytd) ytd.textContent = fmtPlain_perishable(cum);
+    if (vr)  vr.textContent  = bpCum > 0 ? Math.round((cum / bpCum) * 100) + '%' : '–';
+    if (ytdbp) ytdbp.textContent = fmtPlain_perishable(bpCum);
+  });
+
+  // Quarterly
+  function a(k) { return appData_perishable.months[k] ? appData_perishable.months[k].totalAmt : 0; }
+  var q1=a('apr26')+a('may26')+a('jun26'), q2=a('jul26')+a('aug26')+a('sep26');
+  var q3=a('oct26')+a('nov26')+a('dec26'), q4=a('jan27')+a('feb27')+a('mar27');
+  var smt1=q1+q2, smt2=q3+q4, total=smt1+smt2;
+
+  var bpQ1=getBPQ_perishable(['apr26','may26','jun26']), bpQ2=getBPQ_perishable(['jul26','aug26','sep26']);
+  var bpQ3=getBPQ_perishable(['oct26','nov26','dec26']), bpQ4=getBPQ_perishable(['jan27','feb27','mar27']);
+  var bpSmt1=bpQ1+bpQ2, bpSmt2=bpQ3+bpQ4;
+  var bpQEl;
+  bpQEl = document.getElementById('perishable-bp-q1');   if(bpQEl) bpQEl.textContent = bpQ1   ? fmt_perishable(bpQ1)   : '$ –';
+  bpQEl = document.getElementById('perishable-bp-q2');   if(bpQEl) bpQEl.textContent = bpQ2   ? fmt_perishable(bpQ2)   : '$ –';
+  bpQEl = document.getElementById('perishable-bp-smt1'); if(bpQEl) bpQEl.textContent = bpSmt1 ? fmt_perishable(bpSmt1) : '$ –';
+  bpQEl = document.getElementById('perishable-bp-q3');   if(bpQEl) bpQEl.textContent = bpQ3   ? fmt_perishable(bpQ3)   : '$ –';
+  bpQEl = document.getElementById('perishable-bp-q4');   if(bpQEl) bpQEl.textContent = bpQ4   ? fmt_perishable(bpQ4)   : '$ –';
+  bpQEl = document.getElementById('perishable-bp-smt2'); if(bpQEl) bpQEl.textContent = bpSmt2 ? fmt_perishable(bpSmt2) : '$ –';
+
+  function setQ(fid, pid, val, bp) {
+    var f=document.getElementById(fid), p=document.getElementById(pid);
+    if (f) f.textContent = val>0 ? fmt_perishable(val) : '$ –';
+    if (p) p.textContent = bp&&val>0 ? Math.round((val/bp)*100)+'%' : '–';
+  }
+  setQ('perishable-q-fc-q1','perishable-q-pct-q1',q1,bpQ1);
+  setQ('perishable-q-fc-q2','perishable-q-pct-q2',q2,bpQ2);
+  setQ('perishable-q-fc-smt1','perishable-q-pct-smt1',smt1,bpSmt1);
+  setQ('perishable-q-fc-q3','perishable-q-pct-q3',q3,bpQ3);
+  setQ('perishable-q-fc-q4','perishable-q-pct-q4',q4,bpQ4);
+  setQ('perishable-q-fc-smt2','perishable-q-pct-smt2',smt2,bpSmt2);
+  setQ('perishable-q-fc-total','perishable-q-pct-total',total,getTotalBP_perishable());
+
+  var totalBP = getTotalBP_perishable();
+  var bpTotals = document.getElementById('perishable-dashboard').querySelectorAll('[id="perishable-bp-total"]');
+  bpTotals.forEach(function(el){ el.textContent = totalBP > 0 ? fmt_perishable(totalBP) : '$ –'; });
+
+  var ft=document.getElementById('perishable-fc-total'), pt=document.getElementById('perishable-pct-total');
+  if (ft) ft.textContent = total>0 ? fmt_perishable(total) : '$ –';
+  if (pt) pt.textContent = totalBP>0 && total>0 ? Math.round((total/totalBP)*100)+'%' : '–';
+}
+
+function renderMonthTable_perishable(month, d) {
+  const balEl = document.getElementById('perishable-bal-' + month.key);
+  if (balEl) balEl.innerHTML = 'Opening Balance: <span>' + fmt_perishable(month.bp) + '</span>';
+
+  var html = '<div class="detail-table-wrap"><table class="detail-table">'
+    + '<thead><tr>'
+    + '<th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th>'
+    + '<th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th>'
+    + '<th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th>'
+    + '</tr></thead><tbody>';
+
+  d.rows.forEach(function(r) {
+    html += '<tr>'
+      + '<td>' + r.noReq + '</td>'
+      + '<td>' + r.costCen + '</td>'
+      + '<td class="muted">' + r.progress + '</td>'
+      + '<td class="muted">' + r.poNo + '</td>'
+      + '<td class="muted">' + r.grDate + '</td>'
+      + '<td class="desc">'  + r.itemDesc + '</td>'
+      + '<td class="amt">'   + (r.amount  !== null ? fmt_perishable(r.amount)  : '$ –') + '</td>'
+      + '<td class="bal">'   + (r.balance !== null ? fmt_perishable(r.balance) : '–')   + '</td>'
+      + '<td class="muted">' + r.remark + '</td>'
+      + '</tr>';
+  });
+
+  html += '</tbody><tfoot><tr>'
+    + '<td colspan="6">TOTAL</td>'
+    + '<td class="f-amt">' + fmt_perishable(d.totalAmt) + '</td>'
+    + '<td class="f-bal">' + (d.lastBal !== null ? fmt_perishable(d.lastBal) : '–') + '</td>'
+    + '<td></td></tr></tfoot></table></div>';
+
+  document.getElementById('perishable-body-' + month.key).innerHTML = html;
+}
+
+// ═══════════════════════════════════
+// TOGGLE DETAIL
+// ═══════════════════════════════════
+function toggleDetail_perishable(month) {
+  var panel = document.getElementById('perishable-detail-' + month);
+  var btn   = document.getElementById('perishable-btn-' + month);
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  // Close all other panels first
+  document.getElementById('perishable-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
+    p.classList.remove('open');
+  });
+  document.getElementById('perishable-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  // Toggle clicked panel
+  if (!isOpen) {
+    panel.classList.add('open');
+    if (btn) btn.classList.add('active');
+    setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
+  }
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast_perishable(msg, type) {
+  globalShowToast(msg, type);
+}
+
+// ═══════════════════════════════════
+// AUTO LOAD IF PRELOADED DATA EXISTS
+// ═══════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_PERISHABLE__ && window.__PRELOADED_PERISHABLE__.months) {
+    appData_perishable = window.__PRELOADED_PERISHABLE__;
+    updateAllUI_perishable();
+    const count = Object.keys(appData_perishable.months).length;
+    showToast_perishable('✅ ' + count + ' month(s) loaded', 'green');
+  }
+});
+
+  // Expose to global scope
+  window.handleExcel_perishable = handleExcel_perishable;
+  window.toggleDetail_perishable = toggleDetail_perishable;
+})();
+
+(function() {
+// ══════════ REPAIRING MC DASHBOARD ══════════
+// ═══════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════
+const MONTH_MAP = [
+  { key:'apr26', keywords:['april','apr'],   label:'April 2026',     bp:null },
+  { key:'may26', keywords:['may'],            label:'May 2026',       bp:null },
+  { key:'jun26', keywords:['june','jun'],     label:'June 2026',      bp:null },
+  { key:'jul26', keywords:['july','jul'],     label:'July 2026',      bp:null },
+  { key:'aug26', keywords:['august','aug'],   label:'August 2026',    bp:null },
+  { key:'sep26', keywords:['sept','sep'],     label:'September 2026', bp:null },
+  { key:'oct26', keywords:['october','oct'],  label:'October 2026',   bp:null },
+  { key:'nov26', keywords:['november','nov'], label:'November 2026',  bp:null },
+  { key:'dec26', keywords:['december','dec'], label:'December 2026',  bp:null },
+  { key:'jan27', keywords:['january','jan'],  label:'January 2027',   bp:null },
+  { key:'feb27', keywords:['february','feb'], label:'February 2027',  bp:null },
+  { key:'mar27', keywords:['march','mar'],    label:'March 2027',     bp:null },
+];
+
+// BP values are read from Excel — calculated dynamically after upload
+function getBP_repairingmc(key) { var m = MONTH_MAP.find(function(x){ return x.key===key; }); return (m && m.bp) ? m.bp : 0; }
+function getTotalBP_repairingmc() { return MONTH_MAP.reduce(function(s,m){ return s + (m.bp||0); }, 0); }
+function getBPCum_repairingmc(key) {
+  var cum = 0;
+  for (var i=0; i<MONTH_MAP.length; i++) {
+    cum += MONTH_MAP[i].bp || 0;
+    if (MONTH_MAP[i].key === key) return cum;
+  }
+  return 0;
+}
+function getBPQ_repairingmc(keys) { return keys.reduce(function(s,k){ return s + getBP_repairingmc(k); }, 0); }
+
+var appData_repairingmc = { months: {} };
+
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function fmt_repairingmc(n) {
+  if (n === null || n === undefined || isNaN(n)) return '$ –';
+  return '$ ' + Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function fmtPlain_repairingmc(n) {
+  if (n === null || isNaN(n)) return '–';
+  return Number(n).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:2});
+}
+function matchMonth_repairingmc(name) {
+  const l = name.toLowerCase();
+  return MONTH_MAP.find(m => m.keywords.some(k => l.includes(k)));
+}
+
+// ═══════════════════════════════════
+// EXCEL UPLOAD
+// ═══════════════════════════════════
+function handleExcel_repairingmc(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showToast_repairingmc('⏳ Reading ' + file.name + '...', 'yellow');
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+      const matched = [], unmatched = [];
+
+      wb.SheetNames.forEach(function(sheetName) {
+        const month = matchMonth_repairingmc(sheetName);
+        if (!month) { unmatched.push(sheetName); return; }
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' });
+        if (!rows.length) { unmatched.push(sheetName + ' (empty)'); return; }
+        processRows_repairingmc(month, rows);
+        matched.push(sheetName);
+      });
+
+      updateAllUI_repairingmc();
+      event.target.value = '';
+
+      if (matched.length === 0) {
+        showToast_repairingmc('⚠ No sheets matched! Sheet names: ' + wb.SheetNames.join(', '), 'yellow');
+      } else {
+        showToast_repairingmc('✅ ' + matched.length + ' month(s) loaded: ' + matched.join(', '), 'green');
+      }
+
+    } catch(err) {
+      showToast_repairingmc('❌ Error: ' + err.message, 'red');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function processRows_repairingmc(month, rows) {
+  const keys = Object.keys(rows[0]);
+  const col = {
+    noReq:    keys.find(function(k){ return /no.?req/i.test(k); })               || keys[0],
+    costCen:  keys.find(function(k){ return /cost.?cen/i.test(k); })             || keys[1],
+    progress: keys.find(function(k){ return /progress|leadtime/i.test(k); })     || keys[2],
+    poNo:     keys.find(function(k){ return /po.?no/i.test(k); })                || keys[3],
+    grDate:   keys.find(function(k){ return /gr.?date|date/i.test(k); })         || keys[4],
+    itemDesc: keys.find(function(k){ return /item|description|desc/i.test(k); }) || keys[5],
+    amount:   keys.find(function(k){ return /amount|amt/i.test(k); })            || keys[6],
+    balance:  keys.find(function(k){ return /balance|bal/i.test(k); })           || keys[7],
+    remark:   keys.find(function(k){ return /remark|note/i.test(k); })           || keys[8],
+  };
+
+  // Read BP = first non-zero Balance value found in any row (opening balance)
+  var bpValue = null;
+  for (var i=0; i<rows.length; i++) {
+    var bal = parseFloat(String(rows[i][col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(bal) && bal > 0) { bpValue = bal; break; }
+  }
+  // Update MONTH_MAP bp for this month
+  if (bpValue !== null) {
+    var mapEntry = MONTH_MAP.find(function(m){ return m.key === month.key; });
+    if (mapEntry) mapEntry.bp = bpValue;
+  }
+
+  const validRows = rows.filter(function(r) {
+    const v    = String(r[col.noReq]    || '').trim();
+    const desc = String(r[col.itemDesc] || '').trim();
+    if (!v) return false;
+    if (v === '#N/A' || desc === '#N/A') return false;
+    if (/^total$/i.test(v))    return false;
+    if (/^balance$/i.test(v))  return false;
+    if (/^no.?req$/i.test(v))  return false;
+    if (/^forecast/i.test(v))  return false;
+    if (/^summary/i.test(v))   return false;
+    if (/^item.?desc/i.test(desc)) return false;
+    return true;
+  });
+
+  var totalAmt = 0;
+  const cleanRows = validRows.map(function(r) {
+    const amt = parseFloat(String(r[col.amount]  || '').replace(/[^0-9.-]/g, ''));
+    const bal = parseFloat(String(r[col.balance] || '').replace(/[^0-9.-]/g, ''));
+    if (!isNaN(amt)) totalAmt += amt;
+    return {
+      noReq:    String(r[col.noReq]    || ''),
+      costCen:  String(r[col.costCen]  || ''),
+      progress: String(r[col.progress] || ''),
+      poNo:     String(r[col.poNo]     || ''),
+      grDate:   String(r[col.grDate]   || ''),
+      itemDesc: String(r[col.itemDesc] || ''),
+      amount:   isNaN(amt) ? null : amt,
+      balance:  isNaN(bal) ? null : bal,
+      remark:   String(r[col.remark]   || ''),
+    };
+  });
+
+  const lastBal = cleanRows.length ? cleanRows[cleanRows.length - 1].balance : null;
+  appData_repairingmc.months[month.key] = { rows: cleanRows, totalAmt: totalAmt, lastBal: lastBal };
+}
+
+// ═══════════════════════════════════
+// RENDER UI
+// ═══════════════════════════════════
+function updateAllUI_repairingmc() {
+  MONTH_MAP.forEach(function(m) {
+    var bpEl = document.getElementById('repairingmc-bp-' + m.key);
+    if (bpEl) bpEl.textContent = m.bp ? fmt_repairingmc(m.bp) : '$ –';
+  });
+
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_repairingmc.months[m.key];
+    if (!d) return;
+    renderMonthTable_repairingmc(m, d);
+    var fcEl  = document.getElementById('repairingmc-fc-'  + m.key);
+    var pctEl = document.getElementById('repairingmc-pct-' + m.key);
+    if (fcEl)  fcEl.textContent  = fmt_repairingmc(d.totalAmt);
+    if (pctEl) pctEl.textContent = m.bp > 0 ? Math.round((d.totalAmt / m.bp) * 100) + '%' : '–';
+    var btn = document.getElementById('repairingmc-btn-' + m.key);
+    if (btn) btn.classList.add('has-data');
+  });
+
+  // YTD
+  var cum = 0;
+  MONTH_MAP.forEach(function(m) {
+    const d = appData_repairingmc.months[m.key];
+    if (!d) return;
+    cum += d.totalAmt;
+    var ytd = document.getElementById('repairingmc-ytd-' + m.key);
+    var vr  = document.getElementById('repairingmc-var-' + m.key);
+    var ytdbp = document.getElementById('repairingmc-ytdbp-' + m.key);
+    var bpCum = getBPCum_repairingmc(m.key);
+    if (ytd) ytd.textContent = fmtPlain_repairingmc(cum);
+    if (vr)  vr.textContent  = bpCum > 0 ? Math.round((cum / bpCum) * 100) + '%' : '–';
+    if (ytdbp) ytdbp.textContent = fmtPlain_repairingmc(bpCum);
+  });
+
+  // Quarterly
+  function a(k) { return appData_repairingmc.months[k] ? appData_repairingmc.months[k].totalAmt : 0; }
+  var q1=a('apr26')+a('may26')+a('jun26'), q2=a('jul26')+a('aug26')+a('sep26');
+  var q3=a('oct26')+a('nov26')+a('dec26'), q4=a('jan27')+a('feb27')+a('mar27');
+  var smt1=q1+q2, smt2=q3+q4, total=smt1+smt2;
+
+  var bpQ1=getBPQ_repairingmc(['apr26','may26','jun26']), bpQ2=getBPQ_repairingmc(['jul26','aug26','sep26']);
+  var bpQ3=getBPQ_repairingmc(['oct26','nov26','dec26']), bpQ4=getBPQ_repairingmc(['jan27','feb27','mar27']);
+  var bpSmt1=bpQ1+bpQ2, bpSmt2=bpQ3+bpQ4;
+  var bpQEl;
+  bpQEl = document.getElementById('repairingmc-bp-q1');   if(bpQEl) bpQEl.textContent = bpQ1   ? fmt_repairingmc(bpQ1)   : '$ –';
+  bpQEl = document.getElementById('repairingmc-bp-q2');   if(bpQEl) bpQEl.textContent = bpQ2   ? fmt_repairingmc(bpQ2)   : '$ –';
+  bpQEl = document.getElementById('repairingmc-bp-smt1'); if(bpQEl) bpQEl.textContent = bpSmt1 ? fmt_repairingmc(bpSmt1) : '$ –';
+  bpQEl = document.getElementById('repairingmc-bp-q3');   if(bpQEl) bpQEl.textContent = bpQ3   ? fmt_repairingmc(bpQ3)   : '$ –';
+  bpQEl = document.getElementById('repairingmc-bp-q4');   if(bpQEl) bpQEl.textContent = bpQ4   ? fmt_repairingmc(bpQ4)   : '$ –';
+  bpQEl = document.getElementById('repairingmc-bp-smt2'); if(bpQEl) bpQEl.textContent = bpSmt2 ? fmt_repairingmc(bpSmt2) : '$ –';
+
+  function setQ(fid, pid, val, bp) {
+    var f=document.getElementById(fid), p=document.getElementById(pid);
+    if (f) f.textContent = val>0 ? fmt_repairingmc(val) : '$ –';
+    if (p) p.textContent = bp&&val>0 ? Math.round((val/bp)*100)+'%' : '–';
+  }
+  setQ('repairingmc-q-fc-q1','repairingmc-q-pct-q1',q1,bpQ1);
+  setQ('repairingmc-q-fc-q2','repairingmc-q-pct-q2',q2,bpQ2);
+  setQ('repairingmc-q-fc-smt1','repairingmc-q-pct-smt1',smt1,bpSmt1);
+  setQ('repairingmc-q-fc-q3','repairingmc-q-pct-q3',q3,bpQ3);
+  setQ('repairingmc-q-fc-q4','repairingmc-q-pct-q4',q4,bpQ4);
+  setQ('repairingmc-q-fc-smt2','repairingmc-q-pct-smt2',smt2,bpSmt2);
+  setQ('repairingmc-q-fc-total','repairingmc-q-pct-total',total,getTotalBP_repairingmc());
+
+  var totalBP = getTotalBP_repairingmc();
+  var bpTotals = document.getElementById('repairingmc-dashboard').querySelectorAll('[id="repairingmc-bp-total"]');
+  bpTotals.forEach(function(el){ el.textContent = totalBP > 0 ? fmt_repairingmc(totalBP) : '$ –'; });
+
+  var ft=document.getElementById('repairingmc-fc-total'), pt=document.getElementById('repairingmc-pct-total');
+  if (ft) ft.textContent = total>0 ? fmt_repairingmc(total) : '$ –';
+  if (pt) pt.textContent = totalBP>0 && total>0 ? Math.round((total/totalBP)*100)+'%' : '–';
+}
+
+function renderMonthTable_repairingmc(month, d) {
+  const balEl = document.getElementById('repairingmc-bal-' + month.key);
+  if (balEl) balEl.innerHTML = 'Opening Balance: <span>' + fmt_repairingmc(month.bp) + '</span>';
+
+  var html = '<div class="detail-table-wrap"><table class="detail-table">'
+    + '<thead><tr>'
+    + '<th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th>'
+    + '<th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th>'
+    + '<th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th>'
+    + '</tr></thead><tbody>';
+
+  d.rows.forEach(function(r) {
+    html += '<tr>'
+      + '<td>' + r.noReq + '</td>'
+      + '<td>' + r.costCen + '</td>'
+      + '<td class="muted">' + r.progress + '</td>'
+      + '<td class="muted">' + r.poNo + '</td>'
+      + '<td class="muted">' + r.grDate + '</td>'
+      + '<td class="desc">'  + r.itemDesc + '</td>'
+      + '<td class="amt">'   + (r.amount  !== null ? fmt_repairingmc(r.amount)  : '$ –') + '</td>'
+      + '<td class="bal">'   + (r.balance !== null ? fmt_repairingmc(r.balance) : '–')   + '</td>'
+      + '<td class="muted">' + r.remark + '</td>'
+      + '</tr>';
+  });
+
+  html += '</tbody><tfoot><tr>'
+    + '<td colspan="6">TOTAL</td>'
+    + '<td class="f-amt">' + fmt_repairingmc(d.totalAmt) + '</td>'
+    + '<td class="f-bal">' + (d.lastBal !== null ? fmt_repairingmc(d.lastBal) : '–') + '</td>'
+    + '<td></td></tr></tfoot></table></div>';
+
+  document.getElementById('repairingmc-body-' + month.key).innerHTML = html;
+}
+
+// ═══════════════════════════════════
+// TOGGLE DETAIL
+// ═══════════════════════════════════
+function toggleDetail_repairingmc(month) {
+  var panel = document.getElementById('repairingmc-detail-' + month);
+  var btn   = document.getElementById('repairingmc-btn-' + month);
+  if (!panel) return;
+  var isOpen = panel.classList.contains('open');
+  // Close all other panels first
+  document.getElementById('repairingmc-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
+    p.classList.remove('open');
+  });
+  document.getElementById('repairingmc-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
+    b.classList.remove('active');
+  });
+  // Toggle clicked panel
+  if (!isOpen) {
+    panel.classList.add('open');
+    if (btn) btn.classList.add('active');
+    setTimeout(function(){ panel.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 60);
+  }
+}
+
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
+function showToast_repairingmc(msg, type) {
+  globalShowToast(msg, type);
+}
+
+// ═══════════════════════════════════
+// AUTO LOAD IF PRELOADED DATA EXISTS
+// ═══════════════════════════════════
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_REPAIRINGMC__ && window.__PRELOADED_REPAIRINGMC__.months) {
+    appData_repairingmc = window.__PRELOADED_REPAIRINGMC__;
+    updateAllUI_repairingmc();
+    const count = Object.keys(appData_repairingmc.months).length;
+    showToast_repairingmc('✅ ' + count + ' month(s) loaded', 'green');
+  }
+});
+
+  // Expose to global scope
+  window.handleExcel_repairingmc = handleExcel_repairingmc;
+  window.toggleDetail_repairingmc = toggleDetail_repairingmc;
+})();
+
+(function() {
+
+})();
+
+(function() {
+
+})();
+})();
+</script>
+</body>
+</html>

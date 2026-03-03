@@ -185,17 +185,17 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </head>
 <body>
 <!-- ── BACK BUTTON ── -->
-<button class="back-btn" id="back-btn" onclick="showMenu()">← Back</button>
+<button class="back-btn visible" id="back-btn" onclick="showMenu()">← Back</button>
 <!-- FIX: Button starts hidden with correct text -->
-<button id="save-github-btn" onclick="saveToGitHub()">💾 Save</button>
+<button id="save-github-btn" onclick="saveToGitHub()" class="visible" disabled="">⏳ Saving...</button>
 <!-- ── UPLOAD CORNER ── -->
-<div class="upload-trigger" id="upload-corner" style="display: none;">
+<div class="upload-trigger" id="upload-corner" style="display: block;">
 <button class="upload-trigger-btn" id="upload-corner-btn">⬆ Upload Excel</button>
 </div>
 <!-- ── STATUS TOAST ── -->
 <div class="status-bar green" id="global-statusBar">✅ 13 month(s) loaded: SUMMARY, APR, MAY, JUNE, JULY, AUG, SEP, OCT, NOV, DEC, JAN 26, FEB 26, MAR 26</div>
 <!-- ══ MENU PAGE ══ -->
-<div id="menu-page" style="display: flex;">
+<div id="menu-page" style="display: none;">
 <div class="menu-header">
 <h1>Summary Business Plan <span>2026</span></h1>
 <p>SELECT DASHBOARD &nbsp;·&nbsp; FY 2026–2027</p>
@@ -612,7 +612,7 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </div>
 </div>
 </div>
-<div id="repairingmc-dashboard" class="dashboard-page" style="display: none;">
+<div id="repairingmc-dashboard" class="dashboard-page" style="display: block;">
 <div class="upload-trigger">
 <button class="upload-trigger-btn" onclick="document.getElementById('repairingmc-excelInput').click()">⬆ Upload Excel</button>
 <input type="file" id="repairingmc-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_repairingmc(event)">
@@ -857,4 +857,5 @@ async function saveToGitHub() {
 })();
 </script>
 <!-- DASHBOARD SCRIPTS WILL BE ADDED SEPARATELY TO KEEP FILE MANAGEABLE -->
+
 </body></html>

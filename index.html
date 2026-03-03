@@ -5,48 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Summary Business Plan 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="xlsx.js">
-window.addEventListener('DOMContentLoaded', function() {
-  var sb = document.getElementById('save-github-btn');
-  if (sb) {
-    sb.textContent = '💾 Save';
-    sb.style.background = '';
-    sb.style.color = '';
-    sb.disabled = false;
-    sb.classList.remove('visible');
-  }
-});
-
-
-// ═══════════════════════════════════
-// JSONBIN SAVE & AUTO-LOAD
-// ═══════════════════════════════════
-window.addEventListener('DOMContentLoaded', async function() {
-  try {
-    var res = await fetch(JSONBIN_URL + '/latest', {
-      headers: { 'X-Master-Key': JSONBIN_KEY, 'X-Bin-Meta': 'false' }
-    });
-    if (!res.ok) return;
-    var allData = await res.json();
-    if (!allData || typeof allData !== 'object') return;
-    ['building','indirect','perishable','repairingmc'].forEach(function(p) {
-      var d = allData[p];
-      if (!d || !d.months || Object.keys(d.months).length === 0) return;
-      var ad = window['appData_' + p];
-      if (ad) ad.months = d.months;
-      if (d.monthBP) {
-        var mm = window['getMonthMap_' + p] ? window['getMonthMap_' + p]() : [];
-        mm.forEach(function(m) { if (d.monthBP[m.key]) m.bp = d.monthBP[m.key]; });
-      }
-      if (window['updateAllUI_' + p]) window['updateAllUI_' + p]();
-    });
-    console.log('✅ Data loaded from JSONBin');
-  } catch(e) {
-    console.log('JSONBin load error:', e.message);
-  }
-});
-
-</script>
+<script src="xlsx.js"></script>
 <style>
   :root {
     --bg: #0f1117; --surface: #181c27; --surface2: #1e2333;
@@ -342,11 +301,11 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="building-bp-apr26">$ –</td><td id="building-bp-may26">$ –</td><td id="building-bp-jun26">$ –</td>
-          <td id="building-bp-jul26">$ –</td><td id="building-bp-aug26">$ –</td><td id="building-bp-sep26">$ –</td>
-          <td id="building-bp-oct26">$ –</td><td id="building-bp-nov26">$ –</td><td id="building-bp-dec26">$ –</td>
-          <td id="building-bp-jan27">$ –</td><td id="building-bp-feb27">$ –</td><td id="building-bp-mar27">$ –</td>
-          <td class="total-col bp" id="building-bp-total">$ –</td>
+          <td id="building-bp-apr26">$ –</td><td id="building-bp-may26">$ –</td><td id="building-bp-jun26">$ 7,000</td>
+          <td id="building-bp-jul26">$ 10,000</td><td id="building-bp-aug26">$ –</td><td id="building-bp-sep26">$ 17,000</td>
+          <td id="building-bp-oct26">$ –</td><td id="building-bp-nov26">$ –</td><td id="building-bp-dec26">$ 17,000</td>
+          <td id="building-bp-jan27">$ 17,000</td><td id="building-bp-feb27">$ –</td><td id="building-bp-mar27">$ 46,296</td>
+          <td class="total-col bp" id="building-bp-total">$ 114,296</td>
         </tr>
         <tr class="row-fc">
           <td>FC/ACTUAL</td>
@@ -358,10 +317,10 @@ window.addEventListener('DOMContentLoaded', async function() {
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="building-pct-apr26">0%</td><td id="building-pct-may26">0%</td><td id="building-pct-jun26">0%</td>
-          <td id="building-pct-jul26">0%</td><td id="building-pct-aug26">0%</td><td id="building-pct-sep26">0%</td>
-          <td id="building-pct-oct26">0%</td><td id="building-pct-nov26">0%</td><td id="building-pct-dec26">0%</td>
-          <td id="building-pct-jan27">0%</td><td id="building-pct-feb27">0%</td><td id="building-pct-mar27">0%</td>
+          <td id="building-pct-apr26">–</td><td id="building-pct-may26">–</td><td id="building-pct-jun26">0%</td>
+          <td id="building-pct-jul26">0%</td><td id="building-pct-aug26">–</td><td id="building-pct-sep26">0%</td>
+          <td id="building-pct-oct26">–</td><td id="building-pct-nov26">–</td><td id="building-pct-dec26">0%</td>
+          <td id="building-pct-jan27">0%</td><td id="building-pct-feb27">–</td><td id="building-pct-mar27">0%</td>
           <td class="total-col pct" id="building-pct-total">–</td>
         </tr>
       </tbody>
@@ -392,8 +351,8 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="building-bp-q1">$ –</td><td id="building-bp-q2">$ –</td><td id="building-bp-smt1">$ –</td>
-          <td id="building-bp-q3">$ –</td><td id="building-bp-q4">$ –</td><td id="building-bp-smt2">$ –</td>
+          <td id="building-bp-q1">$ 7,000</td><td id="building-bp-q2">$ 27,000</td><td id="building-bp-smt1">$ 34,000</td>
+          <td id="building-bp-q3">$ 17,000</td><td id="building-bp-q4">$ 63,296</td><td id="building-bp-smt2">$ 80,296</td>
           <td class="total-col bp" id="building-bp-total">$ 114,296</td>
         </tr>
         <tr class="row-fc">
@@ -429,21 +388,21 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP</td>
-          <td id="building-ytdbp-apr26">–</td><td id="building-ytdbp-may26">–</td><td id="building-ytdbp-jun26">–</td><td id="building-ytdbp-jul26">–</td>
-          <td id="building-ytdbp-aug26">–</td><td id="building-ytdbp-sep26">–</td><td id="building-ytdbp-oct26">–</td><td id="building-ytdbp-nov26">–</td>
-          <td id="building-ytdbp-dec26">–</td><td id="building-ytdbp-jan27">–</td><td id="building-ytdbp-feb27">–</td><td id="building-ytdbp-mar27">–</td>
+          <td id="building-ytdbp-apr26">0</td><td id="building-ytdbp-may26">0</td><td id="building-ytdbp-jun26">7,000</td><td id="building-ytdbp-jul26">17,000</td>
+          <td id="building-ytdbp-aug26">17,000</td><td id="building-ytdbp-sep26">34,000</td><td id="building-ytdbp-oct26">34,000</td><td id="building-ytdbp-nov26">34,000</td>
+          <td id="building-ytdbp-dec26">51,000</td><td id="building-ytdbp-jan27">68,000</td><td id="building-ytdbp-feb27">68,000</td><td id="building-ytdbp-mar27">114,296</td>
         </tr>
         <tr class="row-fc">
           <td>ACTUAL</td>
-          <td id="building-ytd-apr26">–</td><td id="building-ytd-may26">–</td><td id="building-ytd-jun26">–</td><td id="building-ytd-jul26">–</td>
-          <td id="building-ytd-aug26">–</td><td id="building-ytd-sep26">–</td><td id="building-ytd-oct26">–</td><td id="building-ytd-nov26">–</td>
-          <td id="building-ytd-dec26">–</td><td id="building-ytd-jan27">–</td><td id="building-ytd-feb27">–</td><td id="building-ytd-mar27">–</td>
+          <td id="building-ytd-apr26">0</td><td id="building-ytd-may26">0</td><td id="building-ytd-jun26">0</td><td id="building-ytd-jul26">0</td>
+          <td id="building-ytd-aug26">0</td><td id="building-ytd-sep26">0</td><td id="building-ytd-oct26">0</td><td id="building-ytd-nov26">0</td>
+          <td id="building-ytd-dec26">0</td><td id="building-ytd-jan27">0</td><td id="building-ytd-feb27">0</td><td id="building-ytd-mar27">0</td>
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="building-var-apr26">–</td><td id="building-var-may26">–</td><td id="building-var-jun26">–</td><td id="building-var-jul26">–</td>
-          <td id="building-var-aug26">–</td><td id="building-var-sep26">–</td><td id="building-var-oct26">–</td><td id="building-var-nov26">–</td>
-          <td id="building-var-dec26">–</td><td id="building-var-jan27">–</td><td id="building-var-feb27">–</td><td id="building-var-mar27">–</td>
+          <td id="building-var-apr26">–</td><td id="building-var-may26">–</td><td id="building-var-jun26">0%</td><td id="building-var-jul26">0%</td>
+          <td id="building-var-aug26">0%</td><td id="building-var-sep26">0%</td><td id="building-var-oct26">0%</td><td id="building-var-nov26">0%</td>
+          <td id="building-var-dec26">0%</td><td id="building-var-jan27">0%</td><td id="building-var-feb27">0%</td><td id="building-var-mar27">0%</td>
         </tr>
       </tbody>
     </table>
@@ -497,11 +456,11 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="indirect-bp-apr26">$ –</td><td id="indirect-bp-may26">$ –</td><td id="indirect-bp-jun26">$ –</td>
-          <td id="indirect-bp-jul26">$ –</td><td id="indirect-bp-aug26">$ –</td><td id="indirect-bp-sep26">$ –</td>
-          <td id="indirect-bp-oct26">$ –</td><td id="indirect-bp-nov26">$ –</td><td id="indirect-bp-dec26">$ –</td>
-          <td id="indirect-bp-jan27">$ –</td><td id="indirect-bp-feb27">$ –</td><td id="indirect-bp-mar27">$ –</td>
-          <td class="total-col bp" id="indirect-bp-total">$ –</td>
+          <td id="indirect-bp-apr26">$ 4,797</td><td id="indirect-bp-may26">$ 1,001</td><td id="indirect-bp-jun26">$ 8,605.6</td>
+          <td id="indirect-bp-jul26">$ 3,406.63</td><td id="indirect-bp-aug26">$ 5,553.01</td><td id="indirect-bp-sep26">$ 5,028.01</td>
+          <td id="indirect-bp-oct26">$ 5,542.3</td><td id="indirect-bp-nov26">$ 4,968.01</td><td id="indirect-bp-dec26">$ 5,028.66</td>
+          <td id="indirect-bp-jan27">$ 4,428</td><td id="indirect-bp-feb27">$ 4,718</td><td id="indirect-bp-mar27">$ 4,403</td>
+          <td class="total-col bp" id="indirect-bp-total">$ 57,479.21</td>
         </tr>
         <tr class="row-fc">
           <td>FC/ACTUAL</td>
@@ -527,7 +486,7 @@ window.addEventListener('DOMContentLoaded', async function() {
   <div class="detail-panel" id="indirect-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-apr26">Opening Balance: <span>$ 4,797</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;apr26&#39;)">✕ Close</div></div></div><div id="indirect-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="indirect-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-may26">Opening Balance: <span>$ 1,001</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;may26&#39;)">✕ Close</div></div></div><div id="indirect-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="indirect-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-jun26">Opening Balance: <span>$ 8,605.6</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;jun26&#39;)">✕ Close</div></div></div><div id="indirect-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
-  <div class="detail-panel" id="indirect-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-jul26">Opening Balance: <span>$ 3,406.63</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;jul26&#39;)">✕ Close</div></div></div><div id="indirect-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="indirect-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-jul26">Opening Balance: <span>$ 3,406.63</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;jul26&#39;)">✕ Close</div></div></div><div id="indirect-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody><tr><td>SP 14040062</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14040062</td><td class="desc">LITHIUM PRESSING MACHINE BR 1225</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14040062</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14040062</td><td class="desc">LITHIUM PRESSING MACHINE 1620</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14040062</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14040062</td><td class="desc">LITHIUM PRESSING MACHINE 2330</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14040126</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14040126</td><td class="desc">TERMINAL BOARD CTL : BOARD &amp; BAS</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14040143</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14040143</td><td class="desc">RESISTANCE WELDING M/C</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14050055</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14050055</td><td class="desc">DIES PUNCH WITH HOLES CR - 20</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14050055</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14050055</td><td class="desc">DIES PUNCH WITHOUT HOLES CR - 2450 BLUE</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14050055</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14050055</td><td class="desc">DIES PUNCH WITHOUT HOLES CR 20</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14050062</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14050062</td><td class="desc">ESPEC COMPACT THERMAL SHOCK CHAMBER</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14050133</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14050133</td><td class="desc">PARTS CR-2 WINDING MACHINE </td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14060009</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14060009</td><td class="desc">20 CH OCV CHECKER</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14060009</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14060009</td><td class="desc">POWER METER L50 ( 150 ) A - SH + DISPLAY</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060037</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060037</td><td class="desc">H2N WELDING TAB ( + )</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060037</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060037</td><td class="desc">H2N WELDING TAB ( - )</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060038</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060038</td><td class="desc">MOLD &amp; DIES TRAY</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060049</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060049</td><td class="desc">MODIFICATION CYLINDER CATHODE LINE</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060049</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060049</td><td class="desc">NEW OVEN VACUUM DRIER ROOM</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14060090</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14060090</td><td class="desc">OCV AUTO MACHINE FOR COIN WELDING</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14060094</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14060094</td><td class="desc">ELECTRICAL WORK FOR INSTALLATION PANEL MONITOR ALARM AT PECGI</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060101</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060101</td><td class="desc">NEW MOULD SHOP - PARTITION</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP14060101</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP14060101</td><td class="desc">NEW MOULD SHOP - AC </td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr><tr><td>SP 14060094</td><td></td><td class="muted"></td><td class="muted"></td><td class="muted">SP 14060094</td><td class="desc">ELECTRICAL WORK FOR INSTALLATION PANEL MONITOR ALARM AT PECGI</td><td class="amt">$ –</td><td class="bal">$ 3,406.63</td><td class="muted"></td></tr></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">$ 3,406.63</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="indirect-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-aug26">Opening Balance: <span>$ 5,553.01</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;aug26&#39;)">✕ Close</div></div></div><div id="indirect-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="indirect-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-sep26">Opening Balance: <span>$ 5,028.01</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;sep26&#39;)">✕ Close</div></div></div><div id="indirect-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="indirect-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="indirect-bal-oct26">Opening Balance: <span>$ 5,542.3</span></div><div class="close-btn" onclick="window.toggleDetail_indirect(&#39;oct26&#39;)">✕ Close</div></div></div><div id="indirect-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
@@ -547,8 +506,8 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="indirect-bp-q1">$ –</td><td id="indirect-bp-q2">$ –</td><td id="indirect-bp-smt1">$ –</td>
-          <td id="indirect-bp-q3">$ –</td><td id="indirect-bp-q4">$ –</td><td id="indirect-bp-smt2">$ –</td>
+          <td id="indirect-bp-q1">$ 14,403.6</td><td id="indirect-bp-q2">$ 13,987.65</td><td id="indirect-bp-smt1">$ 28,391.25</td>
+          <td id="indirect-bp-q3">$ 15,538.96</td><td id="indirect-bp-q4">$ 13,549</td><td id="indirect-bp-smt2">$ 29,087.96</td>
           <td class="total-col bp" id="indirect-bp-total">$ 57,479.21</td>
         </tr>
         <tr class="row-fc">
@@ -584,21 +543,21 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP</td>
-          <td id="indirect-ytdbp-apr26">–</td><td id="indirect-ytdbp-may26">–</td><td id="indirect-ytdbp-jun26">–</td><td id="indirect-ytdbp-jul26">–</td>
-          <td id="indirect-ytdbp-aug26">–</td><td id="indirect-ytdbp-sep26">–</td><td id="indirect-ytdbp-oct26">–</td><td id="indirect-ytdbp-nov26">–</td>
-          <td id="indirect-ytdbp-dec26">–</td><td id="indirect-ytdbp-jan27">–</td><td id="indirect-ytdbp-feb27">–</td><td id="indirect-ytdbp-mar27">–</td>
+          <td id="indirect-ytdbp-apr26">4,797</td><td id="indirect-ytdbp-may26">5,798</td><td id="indirect-ytdbp-jun26">14,403.6</td><td id="indirect-ytdbp-jul26">17,810.23</td>
+          <td id="indirect-ytdbp-aug26">23,363.24</td><td id="indirect-ytdbp-sep26">28,391.25</td><td id="indirect-ytdbp-oct26">33,933.54</td><td id="indirect-ytdbp-nov26">38,901.55</td>
+          <td id="indirect-ytdbp-dec26">43,930.21</td><td id="indirect-ytdbp-jan27">48,358.21</td><td id="indirect-ytdbp-feb27">53,076.21</td><td id="indirect-ytdbp-mar27">57,479.21</td>
         </tr>
         <tr class="row-fc">
           <td>ACTUAL</td>
-          <td id="indirect-ytd-apr26">–</td><td id="indirect-ytd-may26">–</td><td id="indirect-ytd-jun26">–</td><td id="indirect-ytd-jul26">–</td>
-          <td id="indirect-ytd-aug26">–</td><td id="indirect-ytd-sep26">–</td><td id="indirect-ytd-oct26">–</td><td id="indirect-ytd-nov26">–</td>
-          <td id="indirect-ytd-dec26">–</td><td id="indirect-ytd-jan27">–</td><td id="indirect-ytd-feb27">–</td><td id="indirect-ytd-mar27">–</td>
+          <td id="indirect-ytd-apr26">0</td><td id="indirect-ytd-may26">0</td><td id="indirect-ytd-jun26">0</td><td id="indirect-ytd-jul26">0</td>
+          <td id="indirect-ytd-aug26">0</td><td id="indirect-ytd-sep26">0</td><td id="indirect-ytd-oct26">0</td><td id="indirect-ytd-nov26">0</td>
+          <td id="indirect-ytd-dec26">0</td><td id="indirect-ytd-jan27">0</td><td id="indirect-ytd-feb27">0</td><td id="indirect-ytd-mar27">0</td>
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="indirect-var-apr26">–</td><td id="indirect-var-may26">–</td><td id="indirect-var-jun26">–</td><td id="indirect-var-jul26">–</td>
-          <td id="indirect-var-aug26">–</td><td id="indirect-var-sep26">–</td><td id="indirect-var-oct26">–</td><td id="indirect-var-nov26">–</td>
-          <td id="indirect-var-dec26">–</td><td id="indirect-var-jan27">–</td><td id="indirect-var-feb27">–</td><td id="indirect-var-mar27">–</td>
+          <td id="indirect-var-apr26">0%</td><td id="indirect-var-may26">0%</td><td id="indirect-var-jun26">0%</td><td id="indirect-var-jul26">0%</td>
+          <td id="indirect-var-aug26">0%</td><td id="indirect-var-sep26">0%</td><td id="indirect-var-oct26">0%</td><td id="indirect-var-nov26">0%</td>
+          <td id="indirect-var-dec26">0%</td><td id="indirect-var-jan27">0%</td><td id="indirect-var-feb27">0%</td><td id="indirect-var-mar27">0%</td>
         </tr>
       </tbody>
     </table>
@@ -652,11 +611,11 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="perishable-bp-apr26">$ –</td><td id="perishable-bp-may26">$ –</td><td id="perishable-bp-jun26">$ –</td>
-          <td id="perishable-bp-jul26">$ –</td><td id="perishable-bp-aug26">$ –</td><td id="perishable-bp-sep26">$ –</td>
-          <td id="perishable-bp-oct26">$ –</td><td id="perishable-bp-nov26">$ –</td><td id="perishable-bp-dec26">$ –</td>
-          <td id="perishable-bp-jan27">$ –</td><td id="perishable-bp-feb27">$ –</td><td id="perishable-bp-mar27">$ –</td>
-          <td class="total-col bp" id="perishable-bp-total">$ –</td>
+          <td id="perishable-bp-apr26">$ 205</td><td id="perishable-bp-may26">$ 1,334</td><td id="perishable-bp-jun26">$ 1,077</td>
+          <td id="perishable-bp-jul26">$ 622.72</td><td id="perishable-bp-aug26">$ 4,652.18</td><td id="perishable-bp-sep26">$ 4,804.11</td>
+          <td id="perishable-bp-oct26">$ 12,916.16</td><td id="perishable-bp-nov26">$ 4,734.85</td><td id="perishable-bp-dec26">$ 5,978.23</td>
+          <td id="perishable-bp-jan27">$ 12,939</td><td id="perishable-bp-feb27">$ 4,718</td><td id="perishable-bp-mar27">$ 4,697</td>
+          <td class="total-col bp" id="perishable-bp-total">$ 58,678.26</td>
         </tr>
         <tr class="row-fc">
           <td>FC/ACTUAL</td>
@@ -682,7 +641,7 @@ window.addEventListener('DOMContentLoaded', async function() {
   <div class="detail-panel" id="perishable-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-apr26">Opening Balance: <span>$ 205</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;apr26&#39;)">✕ Close</div></div></div><div id="perishable-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="perishable-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-may26">Opening Balance: <span>$ 1,334</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;may26&#39;)">✕ Close</div></div></div><div id="perishable-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="perishable-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-jun26">Opening Balance: <span>$ 1,077</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;jun26&#39;)">✕ Close</div></div></div><div id="perishable-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
-  <div class="detail-panel" id="perishable-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-jul26">Opening Balance: <span>$ 622.72</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;jul26&#39;)">✕ Close</div></div></div><div id="perishable-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="perishable-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-jul26">Opening Balance: <span>$ 622.72</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;jul26&#39;)">✕ Close</div></div></div><div id="perishable-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody><tr><td>SP 14040062</td><td></td><td class="muted"></td><td class="muted">SP 14040062</td><td class="muted"></td><td class="desc">LITHIUM PRESSING MACHINE BR 1225</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14040062</td><td></td><td class="muted"></td><td class="muted">SP 14040062</td><td class="muted"></td><td class="desc">LITHIUM PRESSING MACHINE 1620</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14040062</td><td></td><td class="muted"></td><td class="muted">SP 14040062</td><td class="muted"></td><td class="desc">LITHIUM PRESSING MACHINE 2330</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14040126</td><td></td><td class="muted"></td><td class="muted">SP 14040126</td><td class="muted"></td><td class="desc">TERMINAL BOARD CTL : BOARD &amp; BAS</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14040143</td><td></td><td class="muted"></td><td class="muted">SP 14040143</td><td class="muted"></td><td class="desc">RESISTANCE WELDING M/C</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14050055</td><td></td><td class="muted"></td><td class="muted">SP14050055</td><td class="muted"></td><td class="desc">DIES PUNCH WITH HOLES CR - 20</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14050055</td><td></td><td class="muted"></td><td class="muted">SP14050055</td><td class="muted"></td><td class="desc">DIES PUNCH WITHOUT HOLES CR - 2450 BLUE</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14050055</td><td></td><td class="muted"></td><td class="muted">SP14050055</td><td class="muted"></td><td class="desc">DIES PUNCH WITHOUT HOLES CR 20</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14050062</td><td></td><td class="muted"></td><td class="muted">SP14050062</td><td class="muted"></td><td class="desc">ESPEC COMPACT THERMAL SHOCK CHAMBER</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14050133</td><td></td><td class="muted"></td><td class="muted">SP 14050133</td><td class="muted"></td><td class="desc">PARTS CR-2 WINDING MACHINE </td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14060009</td><td></td><td class="muted"></td><td class="muted">SP 14060009</td><td class="muted"></td><td class="desc">20 CH OCV CHECKER</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14060009</td><td></td><td class="muted"></td><td class="muted">SP 14060009</td><td class="muted"></td><td class="desc">POWER METER L50 ( 150 ) A - SH + DISPLAY</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060037</td><td></td><td class="muted"></td><td class="muted">SP14060037</td><td class="muted"></td><td class="desc">H2N WELDING TAB ( + )</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060037</td><td></td><td class="muted"></td><td class="muted">SP14060037</td><td class="muted"></td><td class="desc">H2N WELDING TAB ( - )</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060038</td><td></td><td class="muted"></td><td class="muted">SP14060038</td><td class="muted"></td><td class="desc">MOLD &amp; DIES TRAY</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060049</td><td></td><td class="muted"></td><td class="muted">SP14060049</td><td class="muted"></td><td class="desc">MODIFICATION CYLINDER CATHODE LINE</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060049</td><td></td><td class="muted"></td><td class="muted">SP14060049</td><td class="muted"></td><td class="desc">NEW OVEN VACUUM DRIER ROOM</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14060090</td><td></td><td class="muted"></td><td class="muted">SP 14060090</td><td class="muted"></td><td class="desc">OCV AUTO MACHINE FOR COIN WELDING</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14060094</td><td></td><td class="muted"></td><td class="muted">SP 14060094</td><td class="muted"></td><td class="desc">ELECTRICAL WORK FOR INSTALLATION PANEL MONITOR ALARM AT PECGI</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060101</td><td></td><td class="muted"></td><td class="muted">SP14060101</td><td class="muted"></td><td class="desc">NEW MOULD SHOP - PARTITION</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP14060101</td><td></td><td class="muted"></td><td class="muted">SP14060101</td><td class="muted"></td><td class="desc">NEW MOULD SHOP - AC </td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr><tr><td>SP 14060094</td><td></td><td class="muted"></td><td class="muted">SP 14060094</td><td class="muted"></td><td class="desc">ELECTRICAL WORK FOR INSTALLATION PANEL MONITOR ALARM AT PECGI</td><td class="amt">$ –</td><td class="bal">$ 622.72</td><td class="muted"></td></tr></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">$ 622.72</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="perishable-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-aug26">Opening Balance: <span>$ 4,652.18</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;aug26&#39;)">✕ Close</div></div></div><div id="perishable-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="perishable-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-sep26">Opening Balance: <span>$ 4,804.11</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;sep26&#39;)">✕ Close</div></div></div><div id="perishable-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="perishable-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="perishable-bal-oct26">Opening Balance: <span>$ 12,916.16</span></div><div class="close-btn" onclick="window.toggleDetail_perishable(&#39;oct26&#39;)">✕ Close</div></div></div><div id="perishable-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
@@ -702,8 +661,8 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="perishable-bp-q1">$ –</td><td id="perishable-bp-q2">$ –</td><td id="perishable-bp-smt1">$ –</td>
-          <td id="perishable-bp-q3">$ –</td><td id="perishable-bp-q4">$ –</td><td id="perishable-bp-smt2">$ –</td>
+          <td id="perishable-bp-q1">$ 2,616</td><td id="perishable-bp-q2">$ 10,079.02</td><td id="perishable-bp-smt1">$ 12,695.02</td>
+          <td id="perishable-bp-q3">$ 23,629.24</td><td id="perishable-bp-q4">$ 22,354</td><td id="perishable-bp-smt2">$ 45,983.24</td>
           <td class="total-col bp" id="perishable-bp-total">$ 58,678.26</td>
         </tr>
         <tr class="row-fc">
@@ -739,21 +698,21 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP</td>
-          <td id="perishable-ytdbp-apr26">–</td><td id="perishable-ytdbp-may26">–</td><td id="perishable-ytdbp-jun26">–</td><td id="perishable-ytdbp-jul26">–</td>
-          <td id="perishable-ytdbp-aug26">–</td><td id="perishable-ytdbp-sep26">–</td><td id="perishable-ytdbp-oct26">–</td><td id="perishable-ytdbp-nov26">–</td>
-          <td id="perishable-ytdbp-dec26">–</td><td id="perishable-ytdbp-jan27">–</td><td id="perishable-ytdbp-feb27">–</td><td id="perishable-ytdbp-mar27">–</td>
+          <td id="perishable-ytdbp-apr26">205</td><td id="perishable-ytdbp-may26">1,539</td><td id="perishable-ytdbp-jun26">2,616</td><td id="perishable-ytdbp-jul26">3,238.72</td>
+          <td id="perishable-ytdbp-aug26">7,890.91</td><td id="perishable-ytdbp-sep26">12,695.02</td><td id="perishable-ytdbp-oct26">25,611.18</td><td id="perishable-ytdbp-nov26">30,346.03</td>
+          <td id="perishable-ytdbp-dec26">36,324.26</td><td id="perishable-ytdbp-jan27">49,263.26</td><td id="perishable-ytdbp-feb27">53,981.26</td><td id="perishable-ytdbp-mar27">58,678.26</td>
         </tr>
         <tr class="row-fc">
           <td>ACTUAL</td>
-          <td id="perishable-ytd-apr26">–</td><td id="perishable-ytd-may26">–</td><td id="perishable-ytd-jun26">–</td><td id="perishable-ytd-jul26">–</td>
-          <td id="perishable-ytd-aug26">–</td><td id="perishable-ytd-sep26">–</td><td id="perishable-ytd-oct26">–</td><td id="perishable-ytd-nov26">–</td>
-          <td id="perishable-ytd-dec26">–</td><td id="perishable-ytd-jan27">–</td><td id="perishable-ytd-feb27">–</td><td id="perishable-ytd-mar27">–</td>
+          <td id="perishable-ytd-apr26">0</td><td id="perishable-ytd-may26">0</td><td id="perishable-ytd-jun26">0</td><td id="perishable-ytd-jul26">0</td>
+          <td id="perishable-ytd-aug26">0</td><td id="perishable-ytd-sep26">0</td><td id="perishable-ytd-oct26">0</td><td id="perishable-ytd-nov26">0</td>
+          <td id="perishable-ytd-dec26">0</td><td id="perishable-ytd-jan27">0</td><td id="perishable-ytd-feb27">0</td><td id="perishable-ytd-mar27">0</td>
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="perishable-var-apr26">–</td><td id="perishable-var-may26">–</td><td id="perishable-var-jun26">–</td><td id="perishable-var-jul26">–</td>
-          <td id="perishable-var-aug26">–</td><td id="perishable-var-sep26">–</td><td id="perishable-var-oct26">–</td><td id="perishable-var-nov26">–</td>
-          <td id="perishable-var-dec26">–</td><td id="perishable-var-jan27">–</td><td id="perishable-var-feb27">–</td><td id="perishable-var-mar27">–</td>
+          <td id="perishable-var-apr26">0%</td><td id="perishable-var-may26">0%</td><td id="perishable-var-jun26">0%</td><td id="perishable-var-jul26">0%</td>
+          <td id="perishable-var-aug26">0%</td><td id="perishable-var-sep26">0%</td><td id="perishable-var-oct26">0%</td><td id="perishable-var-nov26">0%</td>
+          <td id="perishable-var-dec26">0%</td><td id="perishable-var-jan27">0%</td><td id="perishable-var-feb27">0%</td><td id="perishable-var-mar27">0%</td>
         </tr>
       </tbody>
     </table>
@@ -807,37 +766,37 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="repairingmc-bp-apr26">$ –</td><td id="repairingmc-bp-may26">$ –</td><td id="repairingmc-bp-jun26">$ –</td>
-          <td id="repairingmc-bp-jul26">$ –</td><td id="repairingmc-bp-aug26">$ –</td><td id="repairingmc-bp-sep26">$ –</td>
-          <td id="repairingmc-bp-oct26">$ –</td><td id="repairingmc-bp-nov26">$ –</td><td id="repairingmc-bp-dec26">$ –</td>
-          <td id="repairingmc-bp-jan27">$ –</td><td id="repairingmc-bp-feb27">$ –</td><td id="repairingmc-bp-mar27">$ –</td>
-          <td class="total-col bp" id="repairingmc-bp-total">$ –</td>
+          <td id="repairingmc-bp-apr26">$ 48,570</td><td id="repairingmc-bp-may26">$ 38,478.96</td><td id="repairingmc-bp-jun26">$ 19,167.33</td>
+          <td id="repairingmc-bp-jul26">$ 40,713.16</td><td id="repairingmc-bp-aug26">$ 37,690.29</td><td id="repairingmc-bp-sep26">$ 52,238.37</td>
+          <td id="repairingmc-bp-oct26">$ 29,270</td><td id="repairingmc-bp-nov26">$ 66,451.47</td><td id="repairingmc-bp-dec26">$ 64,009.29</td>
+          <td id="repairingmc-bp-jan27">$ 70,596.24</td><td id="repairingmc-bp-feb27">$ 23,524.29</td><td id="repairingmc-bp-mar27">$ 36,438.41</td>
+          <td class="total-col bp" id="repairingmc-bp-total">$ 527,147.8</td>
         </tr>
         <tr class="row-fc">
           <td>FC/ACTUAL</td>
-          <td id="repairingmc-fc-apr26">$ 0</td><td id="repairingmc-fc-may26">$ 0</td><td id="repairingmc-fc-jun26">$ 0</td>
-          <td id="repairingmc-fc-jul26">$ 0</td><td id="repairingmc-fc-aug26">$ 0</td><td id="repairingmc-fc-sep26">$ 0</td>
+          <td id="repairingmc-fc-apr26">$ 33,838.64</td><td id="repairingmc-fc-may26">$ 6,652</td><td id="repairingmc-fc-jun26">$ 0</td>
+          <td id="repairingmc-fc-jul26">$ 927.32</td><td id="repairingmc-fc-aug26">$ 0</td><td id="repairingmc-fc-sep26">$ 0</td>
           <td id="repairingmc-fc-oct26">$ 0</td><td id="repairingmc-fc-nov26">$ 0</td><td id="repairingmc-fc-dec26">$ 0</td>
           <td id="repairingmc-fc-jan27">$ 0</td><td id="repairingmc-fc-feb27">$ 0</td><td id="repairingmc-fc-mar27">$ 0</td>
-          <td class="total-col fc" id="repairingmc-fc-total">$ –</td>
+          <td class="total-col fc" id="repairingmc-fc-total">$ 41,417.96</td>
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="repairingmc-pct-apr26">0%</td><td id="repairingmc-pct-may26">0%</td><td id="repairingmc-pct-jun26">0%</td>
-          <td id="repairingmc-pct-jul26">0%</td><td id="repairingmc-pct-aug26">0%</td><td id="repairingmc-pct-sep26">0%</td>
+          <td id="repairingmc-pct-apr26">70%</td><td id="repairingmc-pct-may26">17%</td><td id="repairingmc-pct-jun26">0%</td>
+          <td id="repairingmc-pct-jul26">2%</td><td id="repairingmc-pct-aug26">0%</td><td id="repairingmc-pct-sep26">0%</td>
           <td id="repairingmc-pct-oct26">0%</td><td id="repairingmc-pct-nov26">0%</td><td id="repairingmc-pct-dec26">0%</td>
           <td id="repairingmc-pct-jan27">0%</td><td id="repairingmc-pct-feb27">0%</td><td id="repairingmc-pct-mar27">0%</td>
-          <td class="total-col pct" id="repairingmc-pct-total">–</td>
+          <td class="total-col pct" id="repairingmc-pct-total">8%</td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <!-- DETAIL PANELS -->
-  <div class="detail-panel" id="repairingmc-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-apr26">Opening Balance: <span>$ 48,570</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;apr26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
-  <div class="detail-panel" id="repairingmc-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-may26">Opening Balance: <span>$ 38,478.96</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;may26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-apr26"><div class="detail-inner"><div class="detail-header"><h3>📋 April 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-apr26">Opening Balance: <span>$ 48,570</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;apr26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-apr26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody><tr><td>R29229 </td><td>M01</td><td class="muted">PO </td><td class="muted">PSLBD__26020188</td><td class="muted"></td><td class="desc">M01-Dies VL2330-</td><td class="amt">$ 1,269</td><td class="bal">$ 47,301</td><td class="muted"></td></tr><tr><td>R28481 </td><td>M03</td><td class="muted">PR </td><td class="muted"></td><td class="muted"></td><td class="desc">M03_Lens SV-2514 &amp; CCD KP-F500WCL (PEX)</td><td class="amt">$ 3,376</td><td class="bal">$ 43,925</td><td class="muted"></td></tr><tr><td>R29608</td><td>M05</td><td class="muted">PO </td><td class="muted">PSLBD__26020259</td><td class="muted"></td><td class="desc">M05 Laser Sheild YLC-1 #2</td><td class="amt">$ 929.24</td><td class="bal">$ 42,995.77</td><td class="muted"></td></tr><tr><td>R28374</td><td>M01</td><td class="muted">PR </td><td class="muted"></td><td class="muted"></td><td class="desc">M01-Welding Arm-req quotation</td><td class="amt">$ 3,696</td><td class="bal">$ 39,299.77</td><td class="muted"></td></tr><tr><td>R29204</td><td>M01</td><td class="muted">PR </td><td class="muted"></td><td class="muted"></td><td class="desc">M01-FLIPPER PARTS TPMS 7-REQ QUO</td><td class="amt">$ 3,298</td><td class="bal">$ 36,001.77</td><td class="muted"></td></tr><tr><td>R29374</td><td>M05</td><td class="muted">PO </td><td class="muted">PSLBD__26020261</td><td class="muted"></td><td class="desc">M05 BUSHING CVOT2001</td><td class="amt">$ 1,481</td><td class="bal">$ 34,520.77</td><td class="muted"></td></tr><tr><td>R29509 </td><td>M02</td><td class="muted">Upload OAS Leadtime </td><td class="muted"></td><td class="muted"></td><td class="desc">M02_231-H1 Punch Proses 4 - OMB-548-B CR-2032A/PDN(-)</td><td class="amt">$ 3,405</td><td class="bal">$ 31,115.77</td><td class="muted"></td></tr><tr><td>R30198</td><td>M05</td><td class="muted">Register </td><td class="muted"></td><td class="muted"></td><td class="desc">M05 Omron E3T-ST12M</td><td class="amt">$ 313</td><td class="bal">$ 30,802.77</td><td class="muted"></td></tr><tr><td>R29986</td><td>M05</td><td class="muted">Upload OAS Leadtime </td><td class="muted"></td><td class="muted"></td><td class="desc">M05 Dobot MG400</td><td class="amt">$ 2,472</td><td class="bal">$ 28,330.77</td><td class="muted"></td></tr><tr><td>R29149</td><td>M00</td><td class="muted">Register </td><td class="muted"></td><td class="muted"></td><td class="desc">M00 Vacuum Ejector Koganei MED10-E1-PSL-9W</td><td class="amt">$ 829</td><td class="bal">$ 27,501.77</td><td class="muted"></td></tr><tr><td>R29759</td><td>	M0</td><td class="muted">Eworkflow/OAS </td><td class="muted"></td><td class="muted"></td><td class="desc">	M01-Vacuum block tab weld machine 01</td><td class="amt">$ 2,132</td><td class="bal">$ 25,369.77</td><td class="muted"></td></tr><tr><td>R29882</td><td>M01</td><td class="muted">Eworkflow/OAS </td><td class="muted"></td><td class="muted"></td><td class="desc">M01-robo cylinder IAI-pnp auto 02</td><td class="amt">$ 3,795</td><td class="bal">$ 21,574.77</td><td class="muted"></td></tr><tr><td>R30040</td><td>M00</td><td class="muted">Register </td><td class="muted"></td><td class="muted"></td><td class="desc">M00 Microstep Stepper Motor and Driver System (24 VDC) CRK545BP</td><td class="amt">$ 679</td><td class="bal">$ 20,895.77</td><td class="muted"></td></tr><tr><td>R30222</td><td>M05</td><td class="muted">Register </td><td class="muted"></td><td class="muted"></td><td class="desc">M05 Servis Repair - Dobot MG400</td><td class="amt">$ 584</td><td class="bal">$ 20,311.77</td><td class="muted"></td></tr><tr><td>R30298</td><td>M00</td><td class="muted">Budget </td><td class="muted"></td><td class="muted"></td><td class="desc">M00_Limit Switch Dies (sudah ada penawaran)</td><td class="amt">$ 247</td><td class="bal">$ 20,064.77</td><td class="muted"></td></tr><tr><td>R29780</td><td>M05</td><td class="muted">PR </td><td class="muted"></td><td class="muted"></td><td class="desc">M05 Fastener Takigen #5</td><td class="amt">$ 2,669</td><td class="bal">$ 17,395.77</td><td class="muted"></td></tr><tr><td>R29943</td><td>M09</td><td class="muted">Budget </td><td class="muted"></td><td class="muted"></td><td class="desc">M09-Air Cylinder Mesin Printing LW Coin</td><td class="amt">$ 46.41</td><td class="bal">$ 17,349.36</td><td class="muted"></td></tr><tr><td>R29480</td><td>M07</td><td class="muted">Quotation </td><td class="muted"></td><td class="muted"></td><td class="desc">M07_PLC Port OMRON</td><td class="amt">$ –</td><td class="bal">$ 17,349.36</td><td class="muted"></td></tr><tr><td>R29754</td><td>M07</td><td class="muted">Upload OAS Leadtime </td><td class="muted"></td><td class="muted"></td><td class="desc">M07_Service Carry Cylinder</td><td class="amt">$ 1,662</td><td class="bal">$ 15,687.36</td><td class="muted"></td></tr><tr><td>	R30539</td><td>M00</td><td class="muted">Upload OAS Leadtime </td><td class="muted"></td><td class="muted"></td><td class="desc">M00_Safety Block PressTab (sudah ada penawaran)</td><td class="amt">$ 956</td><td class="bal">$ 14,731.36</td><td class="muted"></td></tr></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 33,838.64</td><td class="f-bal">$ 14,731.36</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-may26"><div class="detail-inner"><div class="detail-header"><h3>📋 May 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-may26">Opening Balance: <span>$ 38,478.96</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;may26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-may26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody><tr><td>R28922</td><td>M00</td><td class="muted">Register </td><td class="muted"></td><td class="muted"></td><td class="desc">M00_CHUCK PUSHER</td><td class="amt">$ 1,830</td><td class="bal">$ 36,648.96</td><td class="muted"></td></tr><tr><td>R29215</td><td>M00</td><td class="muted">Register </td><td class="muted"></td><td class="muted"></td><td class="desc">M00 PUSHER SHRINK TUBE</td><td class="amt">$ 3,051</td><td class="bal">$ 33,597.96</td><td class="muted"></td></tr><tr><td>R30128</td><td>M05</td><td class="muted">Upload OAS Leadtime </td><td class="muted"></td><td class="muted"></td><td class="desc">M05 Spare Parts Robot AIV Omron</td><td class="amt">$ 1,771</td><td class="bal">$ 31,826.96</td><td class="muted"></td></tr></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 6,652</td><td class="f-bal">$ 31,826.96</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="repairingmc-detail-jun26"><div class="detail-inner"><div class="detail-header"><h3>📋 June 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-jun26">Opening Balance: <span>$ 19,167.33</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;jun26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-jun26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
-  <div class="detail-panel" id="repairingmc-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-jul26">Opening Balance: <span>$ 40,713.16</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;jul26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
+  <div class="detail-panel" id="repairingmc-detail-jul26"><div class="detail-inner"><div class="detail-header"><h3>📋 July 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-jul26">Opening Balance: <span>$ 40,713.16</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;jul26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-jul26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody><tr><td>R28258 </td><td>M01</td><td class="muted">PO </td><td class="muted">PSLBD__26020159</td><td class="muted"></td><td class="desc">M01-R88M-K10030H-BS2-update quotation</td><td class="amt">$ 927.32</td><td class="bal">$ 39,785.84</td><td class="muted"></td></tr></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 927.32</td><td class="f-bal">$ 39,785.84</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="repairingmc-detail-aug26"><div class="detail-inner"><div class="detail-header"><h3>📋 August 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-aug26">Opening Balance: <span>$ 37,690.29</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;aug26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-aug26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="repairingmc-detail-sep26"><div class="detail-inner"><div class="detail-header"><h3>📋 September 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-sep26">Opening Balance: <span>$ 52,238.37</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;sep26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-sep26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
   <div class="detail-panel" id="repairingmc-detail-oct26"><div class="detail-inner"><div class="detail-header"><h3>📋 October 2026</h3><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;"><div class="badge" id="repairingmc-bal-oct26">Opening Balance: <span>$ 29,270</span></div><div class="close-btn" onclick="window.toggleDetail_repairingmc(&#39;oct26&#39;)">✕ Close</div></div></div><div id="repairingmc-body-oct26"><div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>NO REQ</th><th>COST CEN</th><th>PROGRESS LEADTIME</th><th>PO NO</th><th>GR DATE</th><th class="desc">ITEM DESCRIPTION</th><th class="r">AMOUNT</th><th class="r">BALANCE</th><th>REMARK</th></tr></thead><tbody></tbody><tfoot><tr><td colspan="6">TOTAL</td><td class="f-amt">$ 0</td><td class="f-bal">–</td><td></td></tr></tfoot></table></div></div></div></div>
@@ -857,21 +816,21 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP 2026</td>
-          <td id="repairingmc-bp-q1">$ –</td><td id="repairingmc-bp-q2">$ –</td><td id="repairingmc-bp-smt1">$ –</td>
-          <td id="repairingmc-bp-q3">$ –</td><td id="repairingmc-bp-q4">$ –</td><td id="repairingmc-bp-smt2">$ –</td>
+          <td id="repairingmc-bp-q1">$ 106,216.29</td><td id="repairingmc-bp-q2">$ 130,641.82</td><td id="repairingmc-bp-smt1">$ 236,858.11</td>
+          <td id="repairingmc-bp-q3">$ 159,730.76</td><td id="repairingmc-bp-q4">$ 130,558.94</td><td id="repairingmc-bp-smt2">$ 290,289.7</td>
           <td class="total-col bp" id="repairingmc-bp-total">$ 527,147.8</td>
         </tr>
         <tr class="row-fc">
           <td>FC/ACTUAL</td>
-          <td id="repairingmc-q-fc-q1">$ –</td><td id="repairingmc-q-fc-q2">$ –</td><td id="repairingmc-q-fc-smt1">$ –</td>
+          <td id="repairingmc-q-fc-q1">$ 40,490.64</td><td id="repairingmc-q-fc-q2">$ 927.32</td><td id="repairingmc-q-fc-smt1">$ 41,417.96</td>
           <td id="repairingmc-q-fc-q3">$ –</td><td id="repairingmc-q-fc-q4">$ –</td><td id="repairingmc-q-fc-smt2">$ –</td>
-          <td class="total-col fc" id="repairingmc-q-fc-total">$ –</td>
+          <td class="total-col fc" id="repairingmc-q-fc-total">$ 41,417.96</td>
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="repairingmc-q-pct-q1">–</td><td id="repairingmc-q-pct-q2">–</td><td id="repairingmc-q-pct-smt1">–</td>
+          <td id="repairingmc-q-pct-q1">38%</td><td id="repairingmc-q-pct-q2">1%</td><td id="repairingmc-q-pct-smt1">17%</td>
           <td id="repairingmc-q-pct-q3">–</td><td id="repairingmc-q-pct-q4">–</td><td id="repairingmc-q-pct-smt2">–</td>
-          <td class="total-col pct" id="repairingmc-q-pct-total">–</td>
+          <td class="total-col pct" id="repairingmc-q-pct-total">8%</td>
         </tr>
       </tbody>
     </table>
@@ -894,21 +853,21 @@ window.addEventListener('DOMContentLoaded', async function() {
       <tbody>
         <tr class="row-bp">
           <td>BP</td>
-          <td id="repairingmc-ytdbp-apr26">–</td><td id="repairingmc-ytdbp-may26">–</td><td id="repairingmc-ytdbp-jun26">–</td><td id="repairingmc-ytdbp-jul26">–</td>
-          <td id="repairingmc-ytdbp-aug26">–</td><td id="repairingmc-ytdbp-sep26">–</td><td id="repairingmc-ytdbp-oct26">–</td><td id="repairingmc-ytdbp-nov26">–</td>
-          <td id="repairingmc-ytdbp-dec26">–</td><td id="repairingmc-ytdbp-jan27">–</td><td id="repairingmc-ytdbp-feb27">–</td><td id="repairingmc-ytdbp-mar27">–</td>
+          <td id="repairingmc-ytdbp-apr26">48,570</td><td id="repairingmc-ytdbp-may26">87,048.96</td><td id="repairingmc-ytdbp-jun26">106,216.29</td><td id="repairingmc-ytdbp-jul26">146,929.44</td>
+          <td id="repairingmc-ytdbp-aug26">184,619.73</td><td id="repairingmc-ytdbp-sep26">236,858.11</td><td id="repairingmc-ytdbp-oct26">266,128.11</td><td id="repairingmc-ytdbp-nov26">332,579.57</td>
+          <td id="repairingmc-ytdbp-dec26">396,588.86</td><td id="repairingmc-ytdbp-jan27">467,185.11</td><td id="repairingmc-ytdbp-feb27">490,709.4</td><td id="repairingmc-ytdbp-mar27">527,147.8</td>
         </tr>
         <tr class="row-fc">
           <td>ACTUAL</td>
-          <td id="repairingmc-ytd-apr26">–</td><td id="repairingmc-ytd-may26">–</td><td id="repairingmc-ytd-jun26">–</td><td id="repairingmc-ytd-jul26">–</td>
-          <td id="repairingmc-ytd-aug26">–</td><td id="repairingmc-ytd-sep26">–</td><td id="repairingmc-ytd-oct26">–</td><td id="repairingmc-ytd-nov26">–</td>
-          <td id="repairingmc-ytd-dec26">–</td><td id="repairingmc-ytd-jan27">–</td><td id="repairingmc-ytd-feb27">–</td><td id="repairingmc-ytd-mar27">–</td>
+          <td id="repairingmc-ytd-apr26">33,838.64</td><td id="repairingmc-ytd-may26">40,490.64</td><td id="repairingmc-ytd-jun26">40,490.64</td><td id="repairingmc-ytd-jul26">41,417.96</td>
+          <td id="repairingmc-ytd-aug26">41,417.96</td><td id="repairingmc-ytd-sep26">41,417.96</td><td id="repairingmc-ytd-oct26">41,417.96</td><td id="repairingmc-ytd-nov26">41,417.96</td>
+          <td id="repairingmc-ytd-dec26">41,417.96</td><td id="repairingmc-ytd-jan27">41,417.96</td><td id="repairingmc-ytd-feb27">41,417.96</td><td id="repairingmc-ytd-mar27">41,417.96</td>
         </tr>
         <tr class="row-pct">
           <td>PERCENTAGE</td>
-          <td id="repairingmc-var-apr26">–</td><td id="repairingmc-var-may26">–</td><td id="repairingmc-var-jun26">–</td><td id="repairingmc-var-jul26">–</td>
-          <td id="repairingmc-var-aug26">–</td><td id="repairingmc-var-sep26">–</td><td id="repairingmc-var-oct26">–</td><td id="repairingmc-var-nov26">–</td>
-          <td id="repairingmc-var-dec26">–</td><td id="repairingmc-var-jan27">–</td><td id="repairingmc-var-feb27">–</td><td id="repairingmc-var-mar27">–</td>
+          <td id="repairingmc-var-apr26">70%</td><td id="repairingmc-var-may26">47%</td><td id="repairingmc-var-jun26">38%</td><td id="repairingmc-var-jul26">28%</td>
+          <td id="repairingmc-var-aug26">22%</td><td id="repairingmc-var-sep26">17%</td><td id="repairingmc-var-oct26">16%</td><td id="repairingmc-var-nov26">12%</td>
+          <td id="repairingmc-var-dec26">10%</td><td id="repairingmc-var-jan27">9%</td><td id="repairingmc-var-feb27">8%</td><td id="repairingmc-var-mar27">8%</td>
         </tr>
       </tbody>
     </table>
@@ -963,90 +922,37 @@ function globalShowToast(msg, type) {
 // ═══════════════════════════════════
 
 
-
-// ═══════════════════════════════════
-// GITHUB AUTO-SAVE
-// ═══════════════════════════════════
-var JSONBIN_URL = 'https://api.jsonbin.io/v3/b/69a6ab11d0ea881f40ea10ba';
-var JSONBIN_KEY = '$2a$10$5J9Vky7nE3Og6TfuKulIpOcV8C6r8zZF1rq82naCYXYS.hio2G2O2';
-
 async function saveToGitHub() {
   var btn = document.getElementById('save-github-btn');
-  var token = getToken();
-  if (!token) return;
-  btn.textContent = '\u23f3 Saving...';
+  btn.textContent = '⏳ Saving...';
   btn.disabled = true;
   try {
-    // 1. Get SHA
-    var getRes = await fetch(
-      'https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/'+GITHUB_FILE,
-      { headers: { 'Authorization': 'token '+token, 'Accept': 'application/vnd.github.v3+json' } }
-    );
-    if (!getRes.ok) { localStorage.removeItem('gh_token'); throw new Error('Token invalid - try again'); }
-    var sha = (await getRes.json()).sha;
-
-    // 2. Collect data
     var allData = {};
     ['building','indirect','perishable','repairingmc'].forEach(function(p) {
       var ad = window['appData_' + p];
       var getBP = window['getMonthBP_' + p];
-      var bpMap = getBP ? getBP() : {};
       if (ad && Object.keys(ad.months).length > 0) {
-        allData[p] = { months: ad.months, monthBP: bpMap };
+        allData[p] = { months: ad.months, monthBP: getBP ? getBP() : {} };
       }
     });
-
-    // 3. Build clean HTML from scratch using template
-    // Get the base HTML (without the data script and with clean button)
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(document.documentElement.outerHTML, 'text/html');
-
-    // Reset save button in the parsed doc
-    var saveBtn = doc.getElementById('save-github-btn');
-    if (saveBtn) {
-      saveBtn.textContent = '\ud83d\udcbe Save';
-      saveBtn.removeAttribute('disabled');
-      saveBtn.style.background = '';
-      saveBtn.style.color = '';
-      saveBtn.classList.remove('visible');
-    }
-
-    // Remove old data script
-    var oldScript = doc.getElementById('__dashboard_data__');
-    if (oldScript) oldScript.remove();
-
-    // Inject new data script
-    var dataScript = doc.createElement('script');
-    dataScript.id = '__dashboard_data__';
-    dataScript.textContent = 'window.__DASHBOARD_DATA__ = ' + JSON.stringify(allData) + ';';
-    doc.head.appendChild(dataScript);
-
-    // Serialize back to string
-    var html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-
-    // 4. Push to GitHub
-    var putRes = await fetch(
-      'https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/'+GITHUB_FILE,
-      {
-        method: 'PUT',
-        headers: { 'Authorization': 'token '+token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Update dashboard data', content: btoa(unescape(encodeURIComponent(html))), sha: sha, branch: GITHUB_BRANCH })
-      }
-    );
-    if (putRes.ok) {
-      btn.textContent = '\u2705 Saved!';
+    var res = await fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
+      body: JSON.stringify(allData)
+    });
+    if (res.ok) {
+      btn.textContent = '✅ Saved!';
       btn.style.background = '#3ecf8e'; btn.style.color = '#0d0f1a';
-      setTimeout(function(){ btn.textContent='\ud83d\udcbe Save'; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 3000);
+      setTimeout(function(){ btn.textContent='💾 Save'; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 3000);
     } else {
-      throw new Error((await putRes.json()).message || 'Push failed');
+      throw new Error('Save failed: ' + res.status);
     }
   } catch(e) {
-    btn.textContent = '\u274c '+e.message;
+    btn.textContent = '❌ '+e.message;
     btn.style.background = '#f05252'; btn.style.color = '#fff';
-    setTimeout(function(){ btn.textContent='\ud83d\udcbe Save'; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 5000);
+    setTimeout(function(){ btn.textContent='💾 Save'; btn.style.background=''; btn.style.color=''; btn.disabled=false; }, 5000);
   }
 }
-
 
 (function() {
 
@@ -1323,12 +1229,8 @@ function toggleDetail_building(month) {
   var btn   = document.getElementById('building-btn-' + month);
   if (!panel) return;
   var isOpen = panel.classList.contains('open');
-  document.getElementById('building-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
-    p.classList.remove('open');
-  });
-  document.getElementById('building-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
+  document.getElementById('building-dashboard').querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('open'); });
+  document.getElementById('building-dashboard').querySelectorAll('th.month-btn').forEach(function(b) { b.classList.remove('active'); });
   if (!isOpen) {
     panel.classList.add('open');
     if (btn) btn.classList.add('active');
@@ -1336,6 +1238,9 @@ function toggleDetail_building(month) {
   }
 }
 
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
 function showToast_building(msg, type) {
   globalShowToast(msg, type);
 }
@@ -1343,8 +1248,9 @@ function showToast_building(msg, type) {
 // ═══════════════════════════════════
 // AUTO LOAD IF PRELOADED DATA EXISTS
 // ═══════════════════════════════════
-window.
-    }
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_BUILDING__ && window.__PRELOADED_BUILDING__.months) {
+    appData_building = window.__PRELOADED_BUILDING__;
     updateAllUI_building();
     const count = Object.keys(appData_building.months).length;
     showToast_building('✅ ' + count + ' month(s) loaded', 'green');
@@ -1632,12 +1538,8 @@ function toggleDetail_indirect(month) {
   var btn   = document.getElementById('indirect-btn-' + month);
   if (!panel) return;
   var isOpen = panel.classList.contains('open');
-  document.getElementById('indirect-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
-    p.classList.remove('open');
-  });
-  document.getElementById('indirect-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
+  document.getElementById('indirect-dashboard').querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('open'); });
+  document.getElementById('indirect-dashboard').querySelectorAll('th.month-btn').forEach(function(b) { b.classList.remove('active'); });
   if (!isOpen) {
     panel.classList.add('open');
     if (btn) btn.classList.add('active');
@@ -1645,6 +1547,9 @@ function toggleDetail_indirect(month) {
   }
 }
 
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
 function showToast_indirect(msg, type) {
   globalShowToast(msg, type);
 }
@@ -1652,8 +1557,9 @@ function showToast_indirect(msg, type) {
 // ═══════════════════════════════════
 // AUTO LOAD IF PRELOADED DATA EXISTS
 // ═══════════════════════════════════
-window.
-    }
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_INDIRECT__ && window.__PRELOADED_INDIRECT__.months) {
+    appData_indirect = window.__PRELOADED_INDIRECT__;
     updateAllUI_indirect();
     const count = Object.keys(appData_indirect.months).length;
     showToast_indirect('✅ ' + count + ' month(s) loaded', 'green');
@@ -1938,12 +1844,8 @@ function toggleDetail_perishable(month) {
   var btn   = document.getElementById('perishable-btn-' + month);
   if (!panel) return;
   var isOpen = panel.classList.contains('open');
-  document.getElementById('perishable-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
-    p.classList.remove('open');
-  });
-  document.getElementById('perishable-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
+  document.getElementById('perishable-dashboard').querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('open'); });
+  document.getElementById('perishable-dashboard').querySelectorAll('th.month-btn').forEach(function(b) { b.classList.remove('active'); });
   if (!isOpen) {
     panel.classList.add('open');
     if (btn) btn.classList.add('active');
@@ -1951,6 +1853,9 @@ function toggleDetail_perishable(month) {
   }
 }
 
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
 function showToast_perishable(msg, type) {
   globalShowToast(msg, type);
 }
@@ -1958,8 +1863,9 @@ function showToast_perishable(msg, type) {
 // ═══════════════════════════════════
 // AUTO LOAD IF PRELOADED DATA EXISTS
 // ═══════════════════════════════════
-window.
-    }
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_PERISHABLE__ && window.__PRELOADED_PERISHABLE__.months) {
+    appData_perishable = window.__PRELOADED_PERISHABLE__;
     updateAllUI_perishable();
     const count = Object.keys(appData_perishable.months).length;
     showToast_perishable('✅ ' + count + ' month(s) loaded', 'green');
@@ -2244,12 +2150,8 @@ function toggleDetail_repairingmc(month) {
   var btn   = document.getElementById('repairingmc-btn-' + month);
   if (!panel) return;
   var isOpen = panel.classList.contains('open');
-  document.getElementById('repairingmc-dashboard').querySelectorAll('.detail-panel').forEach(function(p) {
-    p.classList.remove('open');
-  });
-  document.getElementById('repairingmc-dashboard').querySelectorAll('th.month-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
+  document.getElementById('repairingmc-dashboard').querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('open'); });
+  document.getElementById('repairingmc-dashboard').querySelectorAll('th.month-btn').forEach(function(b) { b.classList.remove('active'); });
   if (!isOpen) {
     panel.classList.add('open');
     if (btn) btn.classList.add('active');
@@ -2257,6 +2159,9 @@ function toggleDetail_repairingmc(month) {
   }
 }
 
+// ═══════════════════════════════════
+// TOAST
+// ═══════════════════════════════════
 function showToast_repairingmc(msg, type) {
   globalShowToast(msg, type);
 }
@@ -2264,8 +2169,9 @@ function showToast_repairingmc(msg, type) {
 // ═══════════════════════════════════
 // AUTO LOAD IF PRELOADED DATA EXISTS
 // ═══════════════════════════════════
-window.
-    }
+window.addEventListener('DOMContentLoaded', function() {
+  if (window.__PRELOADED_REPAIRINGMC__ && window.__PRELOADED_REPAIRINGMC__.months) {
+    appData_repairingmc = window.__PRELOADED_REPAIRINGMC__;
     updateAllUI_repairingmc();
     const count = Object.keys(appData_repairingmc.months).length;
     showToast_repairingmc('✅ ' + count + ' month(s) loaded', 'green');
@@ -2288,6 +2194,50 @@ window.
 
 })();
 })();
+
+// ═══════════════════════════════════
+// JSONBIN CONFIG
+// ═══════════════════════════════════
+var JSONBIN_URL = 'https://api.jsonbin.io/v3/b/69a6ab11d0ea881f40ea10ba';
+var JSONBIN_KEY = '$2a$10$5J9Vky7nE3Og6TfuKulIpOcV8C6r8zZF1rq82naCYXYS.hio2G2O2';
+
+// ═══════════════════════════════════
+// SAVE TO JSONBIN
+// ═══════════════════════════════════
+
+
+// ═══════════════════════════════════
+// AUTO-LOAD FROM JSONBIN ON PAGE OPEN
+// ═══════════════════════════════════
+window.addEventListener('DOMContentLoaded', async function() {
+  // Reset save button
+  var sb = document.getElementById('save-github-btn');
+  if (sb) { sb.textContent='💾 Save'; sb.style.background=''; sb.style.color=''; sb.disabled=false; sb.classList.remove('visible'); }
+  // Load data
+  try {
+    var res = await fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY, 'X-Bin-Meta': 'false' }
+    });
+    if (!res.ok) return;
+    var allData = await res.json();
+    if (!allData || typeof allData !== 'object') return;
+    ['building','indirect','perishable','repairingmc'].forEach(function(p) {
+      var d = allData[p];
+      if (!d || !d.months || Object.keys(d.months).length === 0) return;
+      var ad = window['appData_' + p];
+      if (ad) ad.months = d.months;
+      if (d.monthBP) {
+        var mm = window['getMonthMap_' + p] ? window['getMonthMap_' + p]() : [];
+        mm.forEach(function(m) { if (d.monthBP[m.key]) m.bp = d.monthBP[m.key]; });
+      }
+      if (window['updateAllUI_' + p]) window['updateAllUI_' + p]();
+    });
+    console.log('✅ Data loaded from JSONBin');
+  } catch(e) {
+    console.log('JSONBin load error:', e.message);
+  }
+});
+
 </script>
 </body>
 </html>

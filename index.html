@@ -185,17 +185,17 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </head>
 <body>
 <!-- ── BACK BUTTON ── -->
-<button class="back-btn" id="back-btn" onclick="showMenu()">← Back</button>
+<button class="back-btn visible" id="back-btn" onclick="showMenu()">← Back</button>
 <!-- FIX: Button starts hidden with correct text -->
-<button id="save-github-btn" onclick="saveToGitHub()">💾 Save</button>
+<button id="save-github-btn" onclick="saveToGitHub()" class="visible" disabled="">⏳ Saving...</button>
 <!-- ── UPLOAD CORNER ── -->
-<div class="upload-trigger" id="upload-corner" style="display: none;">
+<div class="upload-trigger" id="upload-corner" style="display: block;">
 <button class="upload-trigger-btn" id="upload-corner-btn">⬆ Upload Excel</button>
 </div>
 <!-- ── STATUS TOAST ── -->
 <div class="status-bar green" id="global-statusBar">✅ 13 month(s) loaded: SUMMARY, APR, MAY, JUNE, JULY, AUG, SEP, OCT, NOV, DEC, JAN 26, FEB 26, MAR 26</div>
 <!-- ══ MENU PAGE ══ -->
-<div id="menu-page" style="display: flex;">
+<div id="menu-page" style="display: none;">
 <div class="menu-header">
 <h1>Summary Business Plan <span>2026</span></h1>
 <p>SELECT DASHBOARD &nbsp;·&nbsp; FY 2026–2027</p>
@@ -228,7 +228,7 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </div>
 </div>
 <!-- ══ DASHBOARD PAGES ══ -->
-<div id="building-dashboard" class="dashboard-page" style="display: none;">
+<div id="building-dashboard" class="dashboard-page" style="display: block;">
 <div class="upload-trigger">
 <button class="upload-trigger-btn" onclick="document.getElementById('building-excelInput').click()">⬆ Upload Excel</button>
 <input type="file" id="building-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_building(event)">
@@ -248,28 +248,28 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </tr>
 <tr>
 <th></th>
-<th class="month-btn" id="building-btn-apr26" onclick="window.toggleDetail_building('apr26')">Apr-26</th>
-<th class="month-btn" id="building-btn-may26" onclick="window.toggleDetail_building('may26')">May-26</th>
-<th class="month-btn" id="building-btn-jun26" onclick="window.toggleDetail_building('jun26')">Jun-26</th>
-<th class="month-btn" id="building-btn-jul26" onclick="window.toggleDetail_building('jul26')">Jul-26</th>
-<th class="month-btn" id="building-btn-aug26" onclick="window.toggleDetail_building('aug26')">Aug-26</th>
-<th class="month-btn" id="building-btn-sep26" onclick="window.toggleDetail_building('sep26')">Sep-26</th>
-<th class="month-btn" id="building-btn-oct26" onclick="window.toggleDetail_building('oct26')">Oct-26</th>
-<th class="month-btn" id="building-btn-nov26" onclick="window.toggleDetail_building('nov26')">Nov-26</th>
-<th class="month-btn" id="building-btn-dec26" onclick="window.toggleDetail_building('dec26')">Dec-26</th>
-<th class="month-btn" id="building-btn-jan27" onclick="window.toggleDetail_building('jan27')">Jan-27</th>
-<th class="month-btn" id="building-btn-feb27" onclick="window.toggleDetail_building('feb27')">Feb-27</th>
-<th class="month-btn" id="building-btn-mar27" onclick="window.toggleDetail_building('mar27')">Mar-27</th>
+<th class="month-btn has-data" id="building-btn-apr26" onclick="window.toggleDetail_building('apr26')">Apr-26</th>
+<th class="month-btn has-data" id="building-btn-may26" onclick="window.toggleDetail_building('may26')">May-26</th>
+<th class="month-btn has-data" id="building-btn-jun26" onclick="window.toggleDetail_building('jun26')">Jun-26</th>
+<th class="month-btn has-data" id="building-btn-jul26" onclick="window.toggleDetail_building('jul26')">Jul-26</th>
+<th class="month-btn has-data" id="building-btn-aug26" onclick="window.toggleDetail_building('aug26')">Aug-26</th>
+<th class="month-btn has-data" id="building-btn-sep26" onclick="window.toggleDetail_building('sep26')">Sep-26</th>
+<th class="month-btn has-data" id="building-btn-oct26" onclick="window.toggleDetail_building('oct26')">Oct-26</th>
+<th class="month-btn has-data" id="building-btn-nov26" onclick="window.toggleDetail_building('nov26')">Nov-26</th>
+<th class="month-btn has-data" id="building-btn-dec26" onclick="window.toggleDetail_building('dec26')">Dec-26</th>
+<th class="month-btn has-data" id="building-btn-jan27" onclick="window.toggleDetail_building('jan27')">Jan-27</th>
+<th class="month-btn has-data" id="building-btn-feb27" onclick="window.toggleDetail_building('feb27')">Feb-27</th>
+<th class="month-btn has-data" id="building-btn-mar27" onclick="window.toggleDetail_building('mar27')">Mar-27</th>
 <th>TOTAL</th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-bp">
 <td>BP 2026</td>
-<td id="building-bp-apr26">$ –</td><td id="building-bp-may26">$ –</td><td id="building-bp-jun26">$ 7,000</td>
-<td id="building-bp-jul26">$ 10,000</td><td id="building-bp-aug26">$ –</td><td id="building-bp-sep26">$ 17,000</td>
-<td id="building-bp-oct26">$ –</td><td id="building-bp-nov26">$ –</td><td id="building-bp-dec26">$ 17,000</td>
-<td id="building-bp-jan27">$ 17,000</td><td id="building-bp-feb27">$ –</td><td id="building-bp-mar27">$ 46,296</td>
+<td id="building-bp-apr26">$ 205</td><td id="building-bp-may26">$ 1,334</td><td id="building-bp-jun26">$ 7,000</td>
+<td id="building-bp-jul26">$ 10,000</td><td id="building-bp-aug26">$ 4,652.18</td><td id="building-bp-sep26">$ 17,000</td>
+<td id="building-bp-oct26">$ 12,916.16</td><td id="building-bp-nov26">$ 4,734.85</td><td id="building-bp-dec26">$ 17,000</td>
+<td id="building-bp-jan27">$ 17,000</td><td id="building-bp-feb27">$ 4,718</td><td id="building-bp-mar27">$ 46,296</td>
 <td class="total-col bp" id="building-bp-total">$ 114,296</td>
 </tr>
 <tr class="row-fc">
@@ -282,10 +282,10 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </tr>
 <tr class="row-pct">
 <td>PERCENTAGE</td>
-<td id="building-pct-apr26">–</td><td id="building-pct-may26">–</td><td id="building-pct-jun26">0%</td>
-<td id="building-pct-jul26">0%</td><td id="building-pct-aug26">–</td><td id="building-pct-sep26">0%</td>
-<td id="building-pct-oct26">–</td><td id="building-pct-nov26">–</td><td id="building-pct-dec26">0%</td>
-<td id="building-pct-jan27">0%</td><td id="building-pct-feb27">–</td><td id="building-pct-mar27">0%</td>
+<td id="building-pct-apr26">0%</td><td id="building-pct-may26">0%</td><td id="building-pct-jun26">0%</td>
+<td id="building-pct-jul26">0%</td><td id="building-pct-aug26">0%</td><td id="building-pct-sep26">0%</td>
+<td id="building-pct-oct26">0%</td><td id="building-pct-nov26">0%</td><td id="building-pct-dec26">0%</td>
+<td id="building-pct-jan27">0%</td><td id="building-pct-feb27">0%</td><td id="building-pct-mar27">0%</td>
 <td class="total-col pct" id="building-pct-total">–</td>
 </tr>
 </tbody>
@@ -591,4 +591,5 @@ window.updateAllUI_building = updateAllUI_building;
 // Add similar code for each dashboard following the building pattern above
 // ═══════════════════════════════════
 </script>
+
 </body></html>

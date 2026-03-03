@@ -185,7 +185,7 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </head>
 <body>
 <button class="back-btn visible" id="back-btn" onclick="showMenu()">← Back</button>
-<button id="save-github-btn" onclick="saveToGitHub()" class="visible" disabled="">⏳ Saving...</button>
+<button id="save-github-btn" onclick="saveToGitHub()" class="visible" style="" disabled="">⏳ Saving...</button>
 <div class="upload-trigger" id="upload-corner" style="display: block;">
 <button class="upload-trigger-btn" id="upload-corner-btn">⬆ Upload Excel</button>
 </div>
@@ -224,7 +224,7 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </div>
 </div>
 
-<div id="building-dashboard" class="dashboard-page" style="display: block;">
+<div id="building-dashboard" class="dashboard-page" style="display: none;">
 <div class="upload-trigger">
 <button class="upload-trigger-btn" onclick="document.getElementById('building-excelInput').click()">⬆ Upload Excel</button>
 <input type="file" id="building-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_building(event)">
@@ -611,7 +611,7 @@ box-shadow:0 4px 16px rgba(62,207,142,0.4); transition:all 0.2s;
 </div>
 </div>
 
-<div id="repairingmc-dashboard" class="dashboard-page" style="display: none;">
+<div id="repairingmc-dashboard" class="dashboard-page" style="display: block;">
 <div class="upload-trigger">
 <button class="upload-trigger-btn" onclick="document.getElementById('repairingmc-excelInput').click()">⬆ Upload Excel</button>
 <input type="file" id="repairingmc-excelInput" accept=".xlsx,.xls" onchange="window.handleExcel_repairingmc(event)">
